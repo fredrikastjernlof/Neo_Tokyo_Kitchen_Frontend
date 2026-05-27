@@ -1,0 +1,94 @@
+$color-pink: #ff00b7;
+$color-bg: #222222;
+$color-black: #111111;
+
+.main-nav {
+    background-color: $color-black;
+    padding: 1rem;
+    border-top: 1px solid $color-bg;
+
+    ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+    }
+
+    li:not(:last-child)::after {
+        content: "|";
+        color: $color-pink;
+        margin: 0 0.8rem;
+    }
+
+    a {
+        color: $color-pink;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: 0.2s ease;
+    }
+
+    a:hover {
+        color: white;
+
+        text-shadow:
+            0 0 4px #ffd36b,
+            0 0 8px #ff9a00;
+    }
+
+    .current a {
+        color: white;
+
+        text-shadow:
+            0 0 4px #ffd36b,
+            0 0 8px #ff9a00;
+    }
+
+    .current iconify-icon {
+        color: white;
+
+        filter:
+            drop-shadow(0 0 4px #ffd36b) drop-shadow(0 0 8px #ff9a00);
+    }
+
+    iconify-icon {
+        display: none;
+    }
+}
+
+/* Mobil */
+@media (max-width: 600px) {
+    .main-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+
+        padding: 0.8rem 0;
+
+        ul {
+            justify-content: center;
+            gap: 2.2rem;
+        }
+
+        li:not(:last-child)::after {
+            content: "";
+            margin: 0;
+        }
+
+        span {
+            display: none;
+        }
+
+        iconify-icon {
+            display: block;
+            color: $color-pink;
+            font-size: 1.8rem;
+        }
+    }
+}
