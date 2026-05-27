@@ -6,6 +6,7 @@ $color-black: #111111;
     background-color: $color-black;
     padding: 1rem;
     border-top: 1px solid $color-bg;
+    border-radius: 0 0 1rem 1rem;
 
     ul {
         display: flex;
@@ -29,12 +30,12 @@ $color-black: #111111;
         color: $color-pink;
         text-decoration: none;
         text-transform: uppercase;
+        font-size: clamp(1rem, 3vw, 1.5rem);
         transition: 0.2s ease;
     }
 
     a:hover {
         color: white;
-
         text-shadow:
             0 0 4px #ffd36b,
             0 0 8px #ff9a00;
@@ -42,7 +43,6 @@ $color-black: #111111;
 
     .current a {
         color: white;
-
         text-shadow:
             0 0 4px #ffd36b,
             0 0 8px #ff9a00;
@@ -50,7 +50,6 @@ $color-black: #111111;
 
     .current iconify-icon {
         color: white;
-
         filter:
             drop-shadow(0 0 4px #ffd36b) drop-shadow(0 0 8px #ff9a00);
     }
@@ -68,8 +67,8 @@ $color-black: #111111;
         right: 0;
         bottom: 0;
         z-index: 10;
-
         padding: 0.8rem 0;
+        border-radius: 0;
 
         ul {
             justify-content: center;

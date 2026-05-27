@@ -10,12 +10,14 @@ $color-white: #f5f5f5;
     text-align: center;
     background-color: $color-black;
     color: $color-white;
+    border-radius: 1rem 1rem 0 0;
 }
 
 /* Mobil */
 @media (max-width: 600px) {
     .site-footer {
         padding-bottom: 3rem;
+        border-radius: 0;
     }
 }
 
@@ -34,7 +36,6 @@ $color-white: #f5f5f5;
 
 .site-footer a:hover {
     color: $color-white;
-
     text-shadow:
         0 0 3px #ffd36b,
         0 0 6px #ff9a00;
