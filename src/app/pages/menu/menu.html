@@ -1,1 +1,49 @@
-<p>menu works!</p>
+<section class="menu-page">
+
+    <h2>Meny</h2>
+
+    <!-- Loop through all menu categories from the API -->
+    @for (category of categories; track category._id) {
+
+    <article class="menu-category">
+
+        <button
+            type="button"
+            class="category-button"
+            (click)="toggleCategory(category._id)"
+        >
+
+            <span class="category-title">
+                {{ category.name }}
+            </span>
+
+        </button>
+
+        <!-- Show menu items if the category is open -->
+        @if (openCategoryId === category._id) {
+
+        <div class="category-items">
+
+            <!-- Loop through menu items for the selected category -->
+            @for (item of getItemsByCategory(category._id); track item._id) {
+
+            <article class="menu-item">
+
+                <h3>{{ item.name }}</h3>
+
+                <p>{{ item.description }}</p>
+
+                <p class="menu-price">
+                    {{ item.price }} kr
+                </p>
+
+            </article>
+            }
+
+        </div>
+        }
+
+    </article>
+    }
+
+</section>
