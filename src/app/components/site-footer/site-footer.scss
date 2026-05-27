@@ -1,0 +1,62 @@
+$color-pink: #ff00b7;
+$color-blue: #00fffb;
+$color-black: #111111;
+$color-white: #f5f5f5;
+
+.site-footer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    text-align: center;
+    background-color: $color-black;
+    color: $color-white;
+}
+
+/* Mobil */
+@media (max-width: 600px) {
+    .site-footer {
+        padding-bottom: 3rem;
+    }
+}
+
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    list-style: none;
+}
+
+.site-footer a {
+    color: $color-white;
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    color: $color-white;
+
+    text-shadow:
+        0 0 3px #ffd36b,
+        0 0 6px #ff9a00;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.social-links a {
+    color: $color-blue;
+}
+
+.social-links iconify-icon {
+    font-size: 1.8rem;
+}
+
+.site-footer p {
+    padding-bottom: 1rem;
+    font-size: 1.2rem;
+    color: $color-blue;
+}
