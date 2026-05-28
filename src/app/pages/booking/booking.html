@@ -1,1 +1,97 @@
-<p>booking works!</p>
+<section class="booking-page">
+
+    <h2>Boka bord</h2>
+    
+    <section class="booking-section">
+        <h3>
+            <span class="booking-heading">
+                <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                Hur många är ni?
+            </span>
+        </h3>
+        <input type="number" min="1" max="12" [(ngModel)]="booking.guests">
+    </section>
+
+    <section class="booking-section">
+        <h3>
+            <span class="booking-heading">
+                <iconify-icon icon="uil:calendar"></iconify-icon>
+                Vilken dag vill ni komma?
+            </span>
+        </h3>
+        <input type="date" [(ngModel)]="booking.date">
+    </section>
+
+    <section class="booking-section">
+        <h3>
+            <span class="booking-heading">
+                <iconify-icon icon="tabler:clock"></iconify-icon>
+                Vilken tid vill ni komma?
+            </span>
+        </h3>
+
+        <input type="time" [(ngModel)]="booking.time">
+
+    </section>
+
+    <section class="booking-section">
+        <h3>
+            <span class="booking-heading">
+                <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
+                Dina uppgifter
+            </span>
+        </h3>
+
+        <input type="text" placeholder="Namn" [(ngModel)]="booking.name">
+        <input type="email" placeholder="E-post" [(ngModel)]="booking.email">
+        <input type="tel" placeholder="Telefon" [(ngModel)]="booking.phone">
+
+    </section>
+
+    <section class="booking-summary">
+
+        <h3>
+            <span class="booking-heading">
+                <iconify-icon icon="icon-park-outline:list"></iconify-icon>
+                Sammanfattning
+            </span>
+        </h3>
+        <ul class="booking-summary-list">
+            <li>
+                <iconify-icon icon="mdi:account-group"></iconify-icon>
+                {{ booking.guests }} personer
+            </li>
+
+            <li>
+                <iconify-icon icon="uil:calendar"></iconify-icon>
+                {{ booking.date || 'Välj datum' }}
+            </li>
+
+            <li>
+                <iconify-icon icon="tabler:clock"></iconify-icon>
+                {{ booking.time }}
+            </li>
+
+            <li>
+                <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
+                {{ booking.name || 'Namn saknas' }}
+            </li>
+
+            <li>
+                <iconify-icon icon="mdi:email-outline"></iconify-icon>
+                {{ booking.email || 'E-post saknas' }}
+            </li>
+
+            <li>
+                <iconify-icon icon="mdi:phone-outline"></iconify-icon>
+                {{ booking.phone || 'Telefon saknas' }}
+            </li>
+
+        </ul>
+    </section>
+
+    <button type="button">
+        Boka
+    </button>
+
+</section>
