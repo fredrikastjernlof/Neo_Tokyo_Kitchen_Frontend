@@ -1,0 +1,118 @@
+$font: 'Tilt Neon', sans-serif;
+
+$color-pink: #FF00B7;
+$color-blue: #00FFFB;
+$color-green: #65FF89;
+
+$color-bg: #222222;
+$color-black: #111111;
+$color-white: #f5f5f5;
+
+.booking-page {
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.5rem 1rem;
+    background-color: rgba(34, 34, 34, 0.95);
+    border-radius: 1rem;
+}
+
+.booking-page h2 {
+    color: $color-pink;
+    text-align: center;
+    font-size: clamp(2rem, 7vw, 3rem);
+    text-transform: uppercase;
+}
+
+.booking-section,
+.booking-summary {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: $color-black;
+    border-radius: 1rem;
+}
+
+.booking-section h3,
+.booking-summary h3 {
+    color: $color-white;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.booking-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: $color-white;
+    text-align: center;
+}
+
+.booking-heading iconify-icon {
+    color: $color-pink;
+    font-size: 2rem;
+}
+
+.booking-page input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: none;
+    border-radius: 999px;
+    background-color: $color-white;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.booking-page input:focus {
+    outline: 2px solid $color-pink;
+    box-shadow:
+        0 0 1rem rgba(255, 0, 183, 0.6);
+}
+
+.booking-summary-list {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+}
+
+.booking-summary-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: $color-white;
+    line-height: 1.5;
+}
+
+.booking-summary-list iconify-icon {
+    color: $color-pink;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.booking-summary p {
+    color: $color-white;
+    line-height: 1.6;
+}
+
+.booking-page button {
+    padding: 1rem;
+    border: none;
+    border-radius: 1rem;
+    background-color: $color-pink;
+    color: $color-green;
+    font-family: inherit;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow:
+        0 0 1rem rgba(255, 0, 183, 0.7);
+}
+
+.booking-page button:hover,
+.booking-page button:focus-visible {
+    text-shadow:
+        0 0 0.3rem rgba(255, 255, 255, 0.9);
+    box-shadow:
+        0 0 1.4rem rgba(255, 0, 183, 0.9);
+}
