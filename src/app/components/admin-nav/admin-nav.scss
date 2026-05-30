@@ -1,0 +1,112 @@
+$color-black: #111111;
+$color-bg: #222222;
+$color-warm-white: #ffe8b5;
+$color-glow: #ffb84d;
+
+.admin-nav {
+    background-color: $color-black;
+    padding: 1rem;
+    border-top: 1px solid $color-bg;
+    border-radius: 0 0 1rem 1rem;
+
+    ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+    }
+
+    li:not(:last-child)::after {
+        content: "|";
+        color: $color-warm-white;
+        margin: 0 0.8rem;
+    }
+
+    a,
+    button {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: $color-warm-white;
+        background: none;
+        border: none;
+        font-family: inherit;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: clamp(1rem, 3vw, 1.2rem);
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    a:hover,
+    button:hover {
+        color: white;
+        text-shadow:
+            0 0 4px #fff2c9,
+            0 0 8px $color-glow,
+            0 0 14px $color-glow;
+    }
+
+    .current a {
+        color: white;
+        text-shadow:
+            0 0 4px #fff2c9,
+            0 0 8px $color-glow,
+            0 0 14px $color-glow;
+    }
+
+    .current iconify-icon,
+    a:hover iconify-icon,
+    button:hover iconify-icon {
+        color: white;
+        filter:
+            drop-shadow(0 0 3px #fff2c9) drop-shadow(0 0 6px $color-glow);
+    }
+
+    iconify-icon {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .admin-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 11;
+        padding: 0.8rem 0;
+        border-radius: 0;
+
+        ul {
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        li:not(:last-child)::after {
+            content: "";
+            margin: 0;
+        }
+
+        span {
+            display: none;
+        }
+
+        iconify-icon {
+            display: block;
+            color: $color-warm-white;
+            font-size: 1.8rem;
+        }
+
+        a,
+        button {
+            font-size: 1rem;
+        }
+    }
+}

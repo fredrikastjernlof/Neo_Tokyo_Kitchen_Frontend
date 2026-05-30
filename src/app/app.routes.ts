@@ -7,14 +7,20 @@ import { Contact } from './pages/contact/contact';
 import { About } from './pages/about/about';
 import { AdminLogin } from './pages/admin-login/admin-login';
 import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
+import { AdminBookings } from './pages/admin-bookings/admin-bookings';
+import { AdminMenu } from './pages/admin-menu/admin-menu';
+import { AdminStaff } from './pages/admin-staff/admin-staff';
 
 export const routes: Routes = [
-    { path: '', component: Home },
-    { path: 'menu', component: Menu },
-    { path: 'booking', component: Booking },
-    { path: 'contact', component: Contact },
-    { path: 'about', component: About },
-    { path: 'admin/login', component: AdminLogin},
-    { path: 'admin/dashboard', component: AdminDashboard },
-    { path: '**', redirectTo: '' }
+  { path: '', component: Home },
+  { path: 'menu', component: Menu },
+  { path: 'booking', component: Booking },
+  { path: 'contact', component: Contact },
+  { path: 'about', component: About },
+  { path: 'admin/login', component: AdminLogin },
+  { path: 'admin/dashboard', component: AdminDashboard },
+  { path: 'admin/bookings', component: AdminBookings },
+  { path: 'admin/menu', component: AdminMenu },
+  { path: 'admin/staff', component: AdminStaff },
+  { path: '**', redirectTo: '' }
 ];

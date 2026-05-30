@@ -1,5 +1,9 @@
 @if (isAdminRoute()) {
   <app-admin-header></app-admin-header>
+
+  @if (!isAdminLoginRoute()) {
+    <app-admin-nav></app-admin-nav>
+  }
 } @else {
   <app-site-header></app-site-header>
   <app-main-nav></app-main-nav>
@@ -9,4 +13,4 @@
   <router-outlet></router-outlet>
 </main>
 
-  <app-site-footer></app-site-footer>
+<app-site-footer></app-site-footer>
