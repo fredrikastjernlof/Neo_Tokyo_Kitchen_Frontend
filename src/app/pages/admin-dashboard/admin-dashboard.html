@@ -1,5 +1,41 @@
+<section class="admin-dashboard">
 
-  <section class="admin-dashboard">
-    <h1>Personalvy</h1>
-    <p>Du är inloggad.</p>
+  <h1>Personalvy</h1>
+
+  <p class="dashboard-intro">
+    Välkommen till restaurangens administrationspanel.
+  </p>
+
+  <!-- Admin shortcuts -->
+  <section
+    class="dashboard-cards"
+    aria-label="Snabbval för administration"
+  >
+
+     <a routerLink="/admin/staff" class="dashboard-card">
+      <iconify-icon icon="mdi:account-group-outline"></iconify-icon>
+
+      <h2>Personal</h2>
+
+      <p>Hantera användarkonton.</p>
+    </a>
+
+    <a routerLink="/admin/bookings" class="dashboard-card">
+      <iconify-icon icon="uil:calendar"></iconify-icon>
+
+      <h2>Bokningar</h2>
+
+      <p>Hantera restaurangens bokningar.</p>
+    </a>
+
+    <a routerLink="/admin/menu" class="dashboard-card">
+      <iconify-icon icon="boxicons:food-menu"></iconify-icon>
+
+      <h2>Menyhantering</h2>
+
+      <p>Hantera kategorier och maträtter.</p>
+    </a>
+
   </section>
+
+</section>
