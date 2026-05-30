@@ -1,97 +1,165 @@
 <section class="booking-page">
 
     <h2>Boka bord</h2>
-    
-    <section class="booking-section">
-        <h3>
-            <span class="booking-heading">
-                <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
-                Hur många är ni?
-            </span>
-        </h3>
-        <input type="number" min="1" max="12" [(ngModel)]="booking.guests">
-    </section>
 
-    <section class="booking-section">
-        <h3>
-            <span class="booking-heading">
-                <iconify-icon icon="uil:calendar"></iconify-icon>
-                Vilken dag vill ni komma?
-            </span>
-        </h3>
-        <input type="date" [(ngModel)]="booking.date">
-    </section>
+    <form class="booking-form" (ngSubmit)="submitBooking()">
 
-    <section class="booking-section">
-        <h3>
-            <span class="booking-heading">
-                <iconify-icon icon="tabler:clock"></iconify-icon>
-                Vilken tid vill ni komma?
-            </span>
-        </h3>
+        <fieldset class="booking-section">
+            <legend>
+                <span class="booking-heading">
+                    <iconify-icon icon="mingcute:group-3-line" aria-hidden="true"></iconify-icon>
+                    Hur många är ni?
+                </span>
+            </legend>
 
-        <input type="time" [(ngModel)]="booking.time">
+            <label for="guests">Antal gäster</label>
+            <input id="guests" name="guests" type="number" min="1" max="12" [(ngModel)]="booking.guests">
+        </fieldset>
 
-    </section>
+        <fieldset class="booking-section">
+            <legend>
+                <span class="booking-heading">
+                    <iconify-icon icon="uil:calendar" aria-hidden="true"></iconify-icon>
+                    Vilken dag vill ni komma?
+                </span>
+            </legend>
 
-    <section class="booking-section">
-        <h3>
-            <span class="booking-heading">
-                <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
-                Dina uppgifter
-            </span>
-        </h3>
+            <label for="date">Datum</label>
+            <input id="date" name="date" type="date" [(ngModel)]="booking.date">
+        </fieldset>
 
-        <input type="text" placeholder="Namn" [(ngModel)]="booking.name">
-        <input type="email" placeholder="E-post" [(ngModel)]="booking.email">
-        <input type="tel" placeholder="Telefon" [(ngModel)]="booking.phone">
+        <fieldset class="booking-section">
+            <legend>
+                <span class="booking-heading">
+                    <iconify-icon icon="tabler:clock" aria-hidden="true"></iconify-icon>
+                    Vilken tid vill ni komma?
+                </span>
+            </legend>
 
-    </section>
+            <label for="time">Tid</label>
+            <input id="time" name="time" type="time" [(ngModel)]="booking.time">
+        </fieldset>
 
-    <section class="booking-summary">
+        <fieldset class="booking-section">
+            <legend>
+                <span class="booking-heading">
+                    <iconify-icon icon="gravity-ui:person-pencil" aria-hidden="true"></iconify-icon>
+                    Dina uppgifter
+                </span>
+            </legend>
 
-        <h3>
-            <span class="booking-heading">
-                <iconify-icon icon="icon-park-outline:list"></iconify-icon>
-                Sammanfattning
-            </span>
-        </h3>
-        <ul class="booking-summary-list">
-            <li>
-                <iconify-icon icon="mdi:account-group"></iconify-icon>
-                {{ booking.guests }} personer
-            </li>
+            <label for="name">Namn</label>
+            <input id="name" name="name" type="text" [(ngModel)]="booking.name">
 
-            <li>
-                <iconify-icon icon="uil:calendar"></iconify-icon>
-                {{ booking.date || 'Välj datum' }}
-            </li>
+            <label for="email">E-post</label>
+            <input id="email" name="email" type="email" [(ngModel)]="booking.email">
 
-            <li>
-                <iconify-icon icon="tabler:clock"></iconify-icon>
-                {{ booking.time }}
-            </li>
+            <label for="phone">Telefon</label>
+            <input id="phone" name="phone" type="tel" [(ngModel)]="booking.phone">
+        </fieldset>
 
-            <li>
-                <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
-                {{ booking.name || 'Namn saknas' }}
-            </li>
+        <section class="booking-summary" aria-labelledby="booking-summary-title">
+            <h3 id="booking-summary-title">
+                <span class="booking-heading">
+                    <iconify-icon icon="icon-park-outline:list" aria-hidden="true"></iconify-icon>
+                    Sammanfattning
+                </span>
+            </h3>
 
-            <li>
-                <iconify-icon icon="mdi:email-outline"></iconify-icon>
-                {{ booking.email || 'E-post saknas' }}
-            </li>
+            <ul class="booking-summary-list">
+                <li>
+                    <iconify-icon icon="mingcute:group-3-line" aria-hidden="true"></iconify-icon>
+                    {{ booking.guests }} personer
+                </li>
 
-            <li>
-                <iconify-icon icon="mdi:phone-outline"></iconify-icon>
-                {{ booking.phone || 'Telefon saknas' }}
-            </li>
+                <li>
+                    <iconify-icon icon="uil:calendar" aria-hidden="true"></iconify-icon>
+                    {{ booking.date || 'Välj datum' }}
+                </li>
 
-        </ul>
-    </section>
+                <li>
+                    <iconify-icon icon="tabler:clock" aria-hidden="true"></iconify-icon>
+                    {{ booking.time }}
+                </li>
 
-    <button type="button">
-        Boka
-    </button>
+                <li>
+                    <iconify-icon icon="gravity-ui:person-pencil" aria-hidden="true"></iconify-icon>
+                    {{ booking.name || 'Namn saknas' }}
+                </li>
+
+                <li>
+                    <iconify-icon icon="mdi:email-outline" aria-hidden="true"></iconify-icon>
+                    {{ booking.email || 'E-post saknas' }}
+                </li>
+
+                <li>
+                    <iconify-icon icon="mdi:phone-outline" aria-hidden="true"></iconify-icon>
+                    {{ booking.phone || 'Telefon saknas' }}
+                </li>
+            </ul>
+        </section>
+
+        @if (confirmedBooking()) {
+        <div class="booking-confirmation" role="dialog" aria-labelledby="booking-confirmation-title">
+            <div class="booking-confirmation-content">
+                <h3 id="booking-confirmation-title">Ditt bord är reserverat</h3>
+
+                <p>
+                    Bokningsnummer:
+                    <strong>{{ confirmedBooking()?.bookingNumber }}</strong>
+                </p>
+
+                <p>
+                    Ett bekräftelsemail har skickats till din e-post.
+                </p>
+
+                <ul class="booking-confirmation-list">
+
+                    <li>
+                        <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                        {{ booking.guests }} personer
+                    </li>
+
+                    <li>
+                        <iconify-icon icon="uil:calendar"></iconify-icon>
+                        {{ booking.date }}
+                    </li>
+
+                    <li>
+                        <iconify-icon icon="tabler:clock"></iconify-icon>
+                        Kl. {{ booking.time }}
+                    </li>
+
+                    <li>
+                        <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
+                        {{ booking.name }}
+                    </li>
+
+                </ul>
+
+                <p>
+                    Kontakta restaurangen om du vill ändra eller avboka din reservation.
+                </p>
+
+                <button type="button" (click)="closeConfirmation()">
+                    Stäng
+                </button>
+            </div>
+        </div>
+        }
+
+        @if (errorMessage()) {
+        <p class="error-message" role="alert">{{ errorMessage() }}</p>
+        }
+
+        <button type="submit" [disabled]="isLoading()">
+            @if (isLoading()) {
+            Bokar...
+            } @else {
+            Boka
+            }
+        </button>
+
+    </form>
 
 </section>
