@@ -6,8 +6,12 @@ $color-glow: #ffb84d;
 .admin-nav {
     background-color: $color-black;
     padding: 1rem;
-    border-top: 1px solid $color-bg;
+    border-top: 1px solid $color-warm-white;
     border-radius: 0 0 1rem 1rem;
+
+    box-shadow:
+        0 -2px 6px rgba(255, 232, 181, 0.18),
+        0 4px 10px rgba(255, 184, 77, 0.12);
 
     ul {
         display: flex;
@@ -38,7 +42,7 @@ $color-glow: #ffb84d;
         font-family: inherit;
         text-decoration: none;
         text-transform: uppercase;
-        font-size: clamp(1rem, 3vw, 1.2rem);
+        font-size: clamp(0.6rem, 4vw, 1rem);
         cursor: pointer;
         transition: 0.2s ease;
     }

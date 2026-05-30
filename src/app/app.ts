@@ -29,13 +29,19 @@ export class App {
 
   constructor(private router: Router) {
     this.isAdminRoute.set(this.router.url.startsWith('/admin'));
-    this.isAdminLoginRoute.set(this.router.url === '/admin/login');
+    // Check if current page is admin login
+    this.isAdminLoginRoute.set(
+      this.router.url.startsWith('/admin/login')
+    );
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         this.isAdminRoute.set(this.router.url.startsWith('/admin'));
-        this.isAdminLoginRoute.set(this.router.url === '/admin/login');
+        // Check if current page is admin login
+        this.isAdminLoginRoute.set(
+          this.router.url.startsWith('/admin/login')
+        );
       });
   }
 }

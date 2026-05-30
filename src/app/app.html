@@ -1,5 +1,7 @@
 @if (isAdminRoute()) {
-  <app-admin-header></app-admin-header>
+  <div [class.admin-login-wrapper]="isAdminLoginRoute()">
+    <app-admin-header></app-admin-header>
+  </div>
 
   @if (!isAdminLoginRoute()) {
     <app-admin-nav></app-admin-nav>

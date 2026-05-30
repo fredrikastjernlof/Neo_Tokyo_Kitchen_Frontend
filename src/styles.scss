@@ -69,6 +69,7 @@ main::after {
   right: 0rem;
 }
 
+app-admin-nav,
 app-admin-header,
 app-site-header,
 app-main-nav,
@@ -77,6 +78,14 @@ app-site-footer {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+}
+
+.admin-login-wrapper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 0 0 1rem 1rem;
+  overflow: hidden;
 }
 
 /* ---------- LINKS ---------- */
