@@ -1,9 +1,12 @@
-<app-site-header></app-site-header>
-
-<app-main-nav></app-main-nav>
+@if (isAdminRoute()) {
+  <app-admin-header></app-admin-header>
+} @else {
+  <app-site-header></app-site-header>
+  <app-main-nav></app-main-nav>
+}
 
 <main>
   <router-outlet></router-outlet>
 </main>
 
-<app-site-footer></app-site-footer>
+  <app-site-footer></app-site-footer>
