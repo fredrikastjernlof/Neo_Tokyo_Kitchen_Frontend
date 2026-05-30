@@ -6,6 +6,7 @@ import { Booking } from './pages/booking/booking';
 import { Contact } from './pages/contact/contact';
 import { About } from './pages/about/about';
 import { AdminLogin } from './pages/admin-login/admin-login';
+import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -14,5 +15,6 @@ export const routes: Routes = [
     { path: 'contact', component: Contact },
     { path: 'about', component: About },
     { path: 'admin/login', component: AdminLogin},
+    { path: 'admin/dashboard', component: AdminDashboard },
     { path: '**', redirectTo: '' }
 ];

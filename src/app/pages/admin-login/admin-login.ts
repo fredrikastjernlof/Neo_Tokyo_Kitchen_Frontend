@@ -39,7 +39,7 @@ export class AdminLogin {
 
         this.isLoading.set(false);
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/admin/dashboard']);
       },
 
       error: (error) => {
