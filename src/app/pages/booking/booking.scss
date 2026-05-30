@@ -94,13 +94,14 @@ $color-white: #f5f5f5;
 }
 
 .booking-summary h3 {
-    margin: 0;
+    margin: 0 0 1rem;
 }
 
 .booking-summary-list {
     display: grid;
     gap: 1rem;
-    width: min(100%, 18rem);
+    width: fit-content;
+    max-width: 100%;
     padding: 0;
     margin: 0 auto;
     list-style: none;
@@ -108,7 +109,7 @@ $color-white: #f5f5f5;
 
 .booking-summary-list li {
     display: grid;
-    grid-template-columns: 2rem 1fr;
+    grid-template-columns: 2rem auto;
     align-items: center;
     gap: 0.75rem;
     color: $color-white;
@@ -194,4 +195,38 @@ $color-white: #f5f5f5;
     justify-self: center;
     color: $color-pink;
     font-size: 1.4rem;
+}
+
+.validation-errors {
+    padding: 1.5rem;
+    background-color: $color-black;
+    border: 1px solid $color-pink;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem rgba(255, 0, 183, 0.3);
+}
+
+.validation-errors p {
+    margin-bottom: 1rem;
+    color: $color-pink;
+    text-align: center;
+    font-weight: bold;
+}
+
+.validation-errors ul {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.validation-errors li {
+    color: $color-white;
+    text-align: center;
+}
+
+.input-error {
+    border: 2px solid $color-pink !important;
+    box-shadow:
+        0 0 0.5rem rgba(255, 0, 183, 0.6);
 }

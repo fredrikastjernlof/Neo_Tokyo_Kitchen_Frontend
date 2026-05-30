@@ -13,7 +13,7 @@
             </legend>
 
             <label for="guests">Antal gäster</label>
-            <input id="guests" name="guests" type="number" min="1" max="12" [(ngModel)]="booking.guests">
+            <input id="guests" name="guests" type="number" min="1" max="12" [(ngModel)]="booking.guests" [class.input-error]="isInvalid('guests')" (input)="clearFieldError('guests')">
         </fieldset>
 
         <fieldset class="booking-section">
@@ -25,7 +25,7 @@
             </legend>
 
             <label for="date">Datum</label>
-            <input id="date" name="date" type="date" [(ngModel)]="booking.date">
+            <input id="date" name="date" type="date" [(ngModel)]="booking.date" [class.input-error]="isInvalid('date')" (input)="clearFieldError('date')">
         </fieldset>
 
         <fieldset class="booking-section">
@@ -37,7 +37,7 @@
             </legend>
 
             <label for="time">Tid</label>
-            <input id="time" name="time" type="time" [(ngModel)]="booking.time">
+            <input id="time" name="time" type="time" [(ngModel)]="booking.time" [class.input-error]="isInvalid('time')" (input)="clearFieldError('time')">
         </fieldset>
 
         <fieldset class="booking-section">
@@ -49,13 +49,13 @@
             </legend>
 
             <label for="name">Namn</label>
-            <input id="name" name="name" type="text" [(ngModel)]="booking.name">
+            <input id="name" name="name" type="text" [(ngModel)]="booking.name" [class.input-error]="isInvalid('name')" (input)="clearFieldError('name')">
 
             <label for="email">E-post</label>
-            <input id="email" name="email" type="email" [(ngModel)]="booking.email">
+            <input id="email" name="email" type="email" [(ngModel)]="booking.email" [class.input-error]="isInvalid('email')" (input)="clearFieldError('email')">
 
             <label for="phone">Telefon</label>
-            <input id="phone" name="phone" type="tel" [(ngModel)]="booking.phone">
+            <input id="phone" name="phone" type="tel" [(ngModel)]="booking.phone" [class.input-error]="isInvalid('phone')" (input)="clearFieldError('phone')">
         </fieldset>
 
         <section class="booking-summary" aria-labelledby="booking-summary-title">
@@ -116,22 +116,22 @@
                 <ul class="booking-confirmation-list">
 
                     <li>
-                        <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                        <iconify-icon icon="mingcute:group-3-line" aria-hidden="true"></iconify-icon>
                         {{ booking.guests }} personer
                     </li>
 
                     <li>
-                        <iconify-icon icon="uil:calendar"></iconify-icon>
+                        <iconify-icon icon="uil:calendar" aria-hidden="true"></iconify-icon>
                         {{ booking.date }}
                     </li>
 
                     <li>
-                        <iconify-icon icon="tabler:clock"></iconify-icon>
+                        <iconify-icon icon="tabler:clock" aria-hidden="true"></iconify-icon>
                         Kl. {{ booking.time }}
                     </li>
 
                     <li>
-                        <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
+                        <iconify-icon icon="gravity-ui:person-pencil" aria-hidden="true"></iconify-icon>
                         {{ booking.name }}
                     </li>
 
@@ -150,6 +150,18 @@
 
         @if (errorMessage()) {
         <p class="error-message" role="alert">{{ errorMessage() }}</p>
+        }
+
+        @if (validationErrors().length > 0) {
+        <div class="validation-errors" role="alert">
+            <p>Kontrollera bokningen:</p>
+
+            <ul>
+                @for (error of validationErrors(); track error) {
+                <li>{{ error }}</li>
+                }
+            </ul>
+        </div>
         }
 
         <button type="submit" [disabled]="isLoading()">
