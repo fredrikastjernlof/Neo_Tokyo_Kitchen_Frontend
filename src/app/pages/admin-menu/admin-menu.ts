@@ -22,11 +22,16 @@ interface EditableCategory {
 })
 export class AdminMenu implements OnInit {
 
+  // State signals
   categories = signal<MenuCategory[]>([]);
   selectedCategory = signal<EditableCategory | null>(null);
   isCreatingCategory = signal(false);
   isSavingCategory = signal(false);
   categoryErrorMessage = signal('');
+  categoryToDelete = signal<EditableCategory | null>(null);
+  showDeleteConfirmation = signal(false);
+  isDeletingCategory = signal(false);
+  categoryValidationErrors = signal<string[]>([]);
 
   editableCategory: EditableCategory = {
     id: '',
@@ -86,16 +91,17 @@ export class AdminMenu implements OnInit {
 
   // Create slug from category name
   createSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .replaceAll('å', 'a')
-    .replaceAll('ä', 'a')
-    .replaceAll('ö', 'o')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
+    return name
+      .toLowerCase()
+      .trim()
+      .replaceAll('å', 'a')
+      .replaceAll('ä', 'a')
+      .replaceAll('ö', 'o')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
 
+  // Save category
   saveCategory(): void {
     const category = this.selectedCategory();
 
@@ -103,8 +109,7 @@ export class AdminMenu implements OnInit {
       return;
     }
 
-    if (!category.name.trim()) {
-      this.categoryErrorMessage.set('Kategorin måste ha ett namn.');
+    if (!this.validateCategory()) {
       return;
     }
 
@@ -132,5 +137,64 @@ export class AdminMenu implements OnInit {
         this.isSavingCategory.set(false);
       },
     });
+  }
+
+  // Open delete confirmation dialog
+  openDeleteConfirmation(): void {
+    const category = this.selectedCategory();
+
+    if (!category || this.isCreatingCategory()) {
+      return;
+    }
+
+    this.categoryToDelete.set(category);
+    this.showDeleteConfirmation.set(true);
+  }
+
+  // Close delete confirmation dialog
+  closeDeleteConfirmation(): void {
+    this.categoryToDelete.set(null);
+    this.showDeleteConfirmation.set(false);
+  }
+
+  // Delete category
+  deleteCategory(): void {
+    const category = this.categoryToDelete();
+
+    if (!category) {
+      return;
+    }
+
+    this.isDeletingCategory.set(true);
+    this.categoryErrorMessage.set('');
+
+    this.menuService.deleteCategory(category.id).subscribe({
+      next: () => {
+        this.loadCategories();
+        this.closeDeleteConfirmation();
+        this.closeCategory();
+        this.isDeletingCategory.set(false);
+      },
+      error: () => {
+        this.categoryErrorMessage.set('Kategorin kunde inte tas bort.');
+        this.isDeletingCategory.set(false);
+      },
+    });
+  }
+
+  validateCategory(): boolean {
+    const errors: string[] = [];
+
+    if (!this.editableCategory.name.trim()) {
+      errors.push('Kategorin måste ha ett namn.');
+    }
+
+    if (!this.editableCategory.description.trim()) {
+      errors.push('Kategorin måste ha en beskrivning.');
+    }
+
+    this.categoryValidationErrors.set(errors);
+
+    return errors.length === 0;
   }
 }

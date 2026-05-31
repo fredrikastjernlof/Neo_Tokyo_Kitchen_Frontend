@@ -60,14 +60,28 @@
             <form (ngSubmit)="saveCategory()">
                 <div class="form-group">
                     <label for="category-name">Namn</label>
-                    <input id="category-name" type="text" name="category-name" [(ngModel)]="editableCategory.name">
+                    <input id="category-name" type="text" name="category-name" [(ngModel)]="editableCategory.name"
+                        [class.input-error]="categoryValidationErrors().includes('Kategorin måste ha ett namn.')">
                 </div>
 
                 <div class="form-group">
                     <label for="category-description">Beskrivning</label>
                     <textarea id="category-description" name="category-description" rows="4"
-                        [(ngModel)]="editableCategory.description"></textarea>
+                        [(ngModel)]="editableCategory.description"
+                        [class.input-error]="categoryValidationErrors().includes('Kategorin måste ha en beskrivning.')"></textarea>
                 </div>
+
+                @if (categoryValidationErrors().length > 0) {
+                <section class="validation-errors">
+                    <h3>Kontrollera formuläret</h3>
+
+                    <ul>
+                        @for (error of categoryValidationErrors(); track error) {
+                        <li>{{ error }}</li>
+                        }
+                    </ul>
+                </section>
+                }
 
                 <section class="category-edit-preview" aria-label="Förhandsvisning av kategori">
                     <h3>Förhandsvisning</h3>
@@ -90,15 +104,57 @@
                 }
 
                 <div class="overlay-actions">
+                    @if (!isCreatingCategory()) {
+                    <button type="button" class="admin-menu__delete-button" (click)="openDeleteConfirmation()">
+                        Radera
+                    </button>
+                    }
+
+                    <button type="button" class="admin-menu__cancel-button" (click)="closeCategory()">
+                        Avbryt
+                    </button>
+
                     <button type="submit" class="admin-menu__save-button">
                         {{ isSavingCategory() ? 'Sparar...' : 'Spara kategori' }}
                     </button>
-
-                    <button type="button" (click)="closeCategory()">
-                        Stäng
-                    </button>
                 </div>
             </form>
+
+        </div>
+    </section>
+    }
+
+    @if (showDeleteConfirmation()) {
+    <section class="category-overlay" role="dialog" aria-modal="true">
+        <div class="category-overlay-content delete-confirmation">
+
+            <div class="overlay-header">
+                <h2>Radera kategori?</h2>
+
+                <button type="button" class="close-button" (click)="closeDeleteConfirmation()"
+                    aria-label="Stäng raderingsfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                Vill du radera
+                <strong>{{ categoryToDelete()?.name }}</strong>?
+            </p>
+
+            <p>
+                Detta går inte att ångra.
+            </p>
+
+            <div class="overlay-actions">
+                <button type="button" class="admin-menu__cancel-button" (click)="closeDeleteConfirmation()">
+                    Avbryt
+                </button>
+
+                <button type="button" class="admin-menu__delete-confirm-button" (click)="deleteCategory()">
+                    {{ isDeletingCategory() ? 'Raderar...' : 'Ja, radera' }}
+                </button>
+            </div>
 
         </div>
     </section>
