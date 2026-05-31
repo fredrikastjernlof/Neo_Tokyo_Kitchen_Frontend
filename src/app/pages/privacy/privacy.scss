@@ -1,0 +1,43 @@
+$font: 'Tilt Neon', sans-serif;
+
+$color-pink: #FF00B7;
+$color-blue: #00FFFB;
+$color-green: #65FF89;
+
+$color-bg: #222222;
+$color-black: #111111;
+$color-white: #f5f5f5;
+
+.info-page {
+    display: grid;
+    padding: 1.5rem 1rem;
+}
+
+.info-card {
+    display: grid;
+    gap: 1rem;
+    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 2rem;
+    background-color: $color-black;
+    border-radius: 1rem;
+}
+
+.info-card h1 {
+    color: $color-pink;
+    text-align: center;
+    font-size: clamp(2rem, 7vw, 3rem);
+    margin-bottom: 1rem;
+}
+
+.info-card h2 {
+    color: $color-pink;
+    margin-top: 1.5rem;
+    font-size: 1.4rem;
+}
+
+.info-card p {
+    color: $color-white;
+    line-height: 1.7;
+}

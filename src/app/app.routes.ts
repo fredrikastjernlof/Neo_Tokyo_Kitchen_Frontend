@@ -12,6 +12,7 @@ import { AdminMenu } from './pages/admin-menu/admin-menu';
 import { AdminStaff } from './pages/admin-staff/admin-staff';
 import { authGuard } from './guards/auth-guard';
 import { Accessibility } from './pages/accessibility/accessibility';
+import { Privacy } from './pages/privacy/privacy';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'contact', component: Contact },
   { path: 'about', component: About },
   { path: 'accessibility', component: Accessibility },
+  { path: 'privacy', component: Privacy },
   { path: 'admin/login', component: AdminLogin },
   { path: 'admin/dashboard', component: AdminDashboard,canActivate: [authGuard], },
   { path: 'admin/bookings', component: AdminBookings, canActivate: [authGuard], },
