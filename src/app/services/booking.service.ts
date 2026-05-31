@@ -78,4 +78,15 @@ export class BookingService {
       }
     );
   }
+
+  // Delete booking
+  deleteBooking(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/bookings/${id}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+  
 }

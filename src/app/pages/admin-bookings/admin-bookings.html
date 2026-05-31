@@ -12,7 +12,7 @@
             Välj datum
         </label>
 
-        <input id="booking-date" type="date" name="booking-date">
+        <input id="booking-date" type="date" name="booking-date" [(ngModel)]="selectedDate">
     </section>
 
     <!-- Booking summary -->
@@ -20,20 +20,30 @@
 
         <article>
             <h2>Bokningar</h2>
-            <p>0</p>
+            <p>{{ totalBookings }}</p>
         </article>
 
         <article>
             <h2>Gäster totalt</h2>
-            <p>0</p>
+            <p>{{ totalGuests }}</p>
         </article>
 
+    </section>
+
+    <!-- Booking search -->
+    <section class="booking-search" aria-label="Sök bokning">
+        <label for="booking-search">
+            Sök bokning
+        </label>
+
+        <input id="booking-search" type="search" name="booking-search"
+            placeholder="Sök på namn, telefon eller bokningsnummer" [(ngModel)]="searchTerm">
     </section>
 
     <!-- Booking list -->
     <section class="booking-list" aria-label="Bokningslista">
 
-        @for (booking of bookings(); track booking.id) {
+        @for (booking of filteredBookings; track booking.id) {
         <article class="booking-card">
 
             <h2>{{ booking.name }}</h2>
@@ -74,34 +84,51 @@
 
                 <div class="form-group">
                     <label for="edit-name">Namn</label>
-                    <input id="edit-name" type="text" name="name" [(ngModel)]="editableBooking.name">
+                    <input id="edit-name" type="text" name="name" [(ngModel)]="editableBooking.name"
+                        [class.input-error]="isInvalid('name')">
                 </div>
 
                 <div class="form-group">
                     <label for="edit-email">E-post</label>
-                    <input id="edit-email" type="email" name="email" [(ngModel)]="editableBooking.email">
+                    <input id="edit-email" type="email" name="email" [(ngModel)]="editableBooking.email"
+                        [class.input-error]="isInvalid('email')">
                 </div>
 
                 <div class="form-group">
                     <label for="edit-phone">Telefon</label>
-                    <input id="edit-phone" type="tel" name="phone" [(ngModel)]="editableBooking.phone">
+                    <input id="edit-phone" type="tel" name="phone" [(ngModel)]="editableBooking.phone"
+                        [class.input-error]="isInvalid('phone')">
                 </div>
 
                 <div class="form-group">
                     <label for="edit-date">Datum</label>
-                    <input id="edit-date" type="date" name="date" [(ngModel)]="editableBooking.date">
+                    <input id="edit-date" type="date" name="date" [(ngModel)]="editableBooking.date"
+                        [class.input-error]="isInvalid('date')">
                 </div>
 
                 <div class="form-group">
                     <label for="edit-time">Tid</label>
-                    <input id="edit-time" type="time" name="time" [(ngModel)]="editableBooking.time">
+                    <input id="edit-time" type="time" name="time" [(ngModel)]="editableBooking.time"
+                        [class.input-error]="isInvalid('time')">
                 </div>
 
                 <div class="form-group">
                     <label for="edit-guests">Antal gäster</label>
                     <input id="edit-guests" type="number" name="guests" min="1" max="12"
-                        [(ngModel)]="editableBooking.guests">
+                        [(ngModel)]="editableBooking.guests" [class.input-error]="isInvalid('guests')">
                 </div>
+
+                @if (validationErrors().length > 0) {
+                <section class="validation-errors" role="alert">
+                    <h3>Kontrollera bokningen</h3>
+
+                    <ul>
+                        @for (error of validationErrors(); track error) {
+                        <li>{{ error }}</li>
+                        }
+                    </ul>
+                </section>
+                }
 
                 <!-- Live booking summary -->
                 <section class="booking-edit-summary" aria-label="Sammanfattning av ändringar">
@@ -143,16 +170,46 @@
                         Stäng
                     </button>
 
-                    <button type="button" class="danger-button">
+                    <button type="button" class="danger-button" (click)="openDeleteConfirmation()">
                         Ta bort bokning
                     </button>
                 </div>
 
             </form>
 
+            @if (showDeleteConfirmation()) {
+
+            <section class="delete-confirmation">
+
+                <h3>
+                    Ta bort bokning?
+                </h3>
+
+                <p>
+                    Bokning {{ editableBooking.bookingNumber }}
+                    kommer att tas bort permanent.
+                </p>
+
+                <div class="confirmation-actions">
+
+                    <button type="button" class="danger-button" (click)="deleteBooking()">
+                        Ja, ta bort
+                    </button>
+
+                    <button type="button" (click)="closeDeleteConfirmation()">
+                        Avbryt
+                    </button>
+
+                </div>
+
+            </section>
+
+            }
+
         </div>
 
     </section>
     }
+
 
 </section>
