@@ -366,3 +366,110 @@ $color-glow: #ffb84d;
 .validation-errors ul {
     padding-left: 1.2rem;
 }
+
+/* MenuItems */
+
+.category-menu-items {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 232, 181, 0.35);
+}
+
+.category-menu-items-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    margin-bottom: 1.5rem;
+}
+
+.category-menu-items-header h3 {
+    margin: 0;
+    color: white;
+    text-align: center;
+}
+
+.category-menu-items-header button {
+    align-self: center;
+    padding: 0.65rem 1rem;
+    background: transparent;
+    color: $color-warm-white;
+    border: 1px solid rgba(255, 232, 181, 0.6);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.category-menu-items-header button:hover {
+    color: white;
+    border-color: $color-warm-white;
+    box-shadow:
+        0 0 4px #fff2c9,
+        0 0 8px $color-glow;
+}
+
+.menu-item-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+
+    border-top: 1px solid rgba(255, 232, 181, 0.45);
+    border-bottom: 1px solid rgba(255, 232, 181, 0.45);
+}
+
+.menu-item-card h4 {
+    margin: 0;
+    color: white;
+}
+
+.menu-item-card p {
+    margin: 0;
+}
+
+.menu-item-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-item-card__icons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.menu-item-card__price {
+    margin: 0;
+    color: white;
+    font-weight: 600;
+}
+
+.menu-item-card button {
+    align-self: flex-start;
+    padding: 0.65rem 1rem;
+    background: transparent;
+    color: $color-warm-white;
+    border: 1px solid rgba(255, 232, 181, 0.6);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.menu-item-card button:hover {
+    color: white;
+    border-color: $color-warm-white;
+    box-shadow:
+        0 0 4px #fff2c9,
+        0 0 8px $color-glow;
+}
+
+.menu-item-card__icons iconify-icon {
+    font-size: 1.3rem;
+    color: $color-warm-white;
+}

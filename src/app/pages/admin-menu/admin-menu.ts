@@ -4,6 +4,7 @@ import 'iconify-icon';
 
 import {
   MenuCategory,
+  MenuItem,
   MenuService,
 } from '../../services/menu.service';
 
@@ -19,6 +20,17 @@ interface EditableCategory {
   };
 }
 
+interface EditableMenuItem {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  protein: string;
+  spiceLevel: number;
+  isAvailable: boolean;
+}
+
 @Component({
   selector: 'app-admin-menu',
   imports: [FormsModule],
@@ -28,7 +40,7 @@ interface EditableCategory {
 })
 export class AdminMenu implements OnInit {
 
-  // State signals
+  // Category state
   categories = signal<MenuCategory[]>([]);
   selectedCategory = signal<EditableCategory | null>(null);
   isCreatingCategory = signal(false);
@@ -39,19 +51,44 @@ export class AdminMenu implements OnInit {
   isDeletingCategory = signal(false);
   categoryValidationErrors = signal<string[]>([]);
 
+  // Menu item state
+  menuItems = signal<MenuItem[]>([]);
+  selectedMenuCategory = signal<MenuCategory | null>(null);
+  selectedMenuItem = signal<EditableMenuItem | null>(null);
+  isCreatingMenuItem = signal(false);
+  isSavingMenuItem = signal(false);
+  menuItemErrorMessage = signal('');
+  menuItemValidationErrors = signal<string[]>([]);
+
+  // Image upload state
   selectedImageFile: File | null = null;
   imagePreviewUrl = signal<string | null>(null);
 
+
+  // Editable category object 
   editableCategory: EditableCategory = {
     id: '',
     name: '',
     description: '',
   };
 
+  // Editable menu item object
+  editableMenuItem: EditableMenuItem = {
+    id: '',
+    name: '',
+    description: '',
+    category: '',
+    price: 0,
+    protein: 'none',
+    spiceLevel: 0,
+    isAvailable: true,
+  };
+
   constructor(private menuService: MenuService) { }
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadMenuItems();
   }
 
   // Load menu categories
@@ -64,6 +101,207 @@ export class AdminMenu implements OnInit {
         console.error('Could not load categories', error);
       },
     });
+  }
+
+  // Load menu items
+  loadMenuItems(): void {
+    this.menuService.getMenuItems().subscribe({
+      next: (menuItems) => {
+        this.menuItems.set(menuItems);
+      },
+      error: (error) => {
+        console.error('Could not load menu items', error);
+      },
+    });
+  }
+
+  // Get icon name for protein type
+  getProteinIcon(protein?: string): string {
+    const icons: Record<string, string> = {
+      beef: 'ph:cow',
+      pork: 'lucide-lab:pig',
+      chicken: 'fluent-emoji-high-contrast:chicken',
+      duck: 'hugeicons:rubber-duck',
+      tofu: 'lucide:sprout',
+      none: '',
+    };
+
+    return icons[protein || 'none'] || '';
+  }
+
+  getSpiceIcons(spiceLevel?: number): number[] {
+    return Array(spiceLevel || 0).fill(0);
+  }
+
+  // Open/close menu item management for one category
+  openMenuItemsForCategory(category: MenuCategory): void {
+
+    const currentCategory =
+      this.selectedMenuCategory();
+
+    if (
+      currentCategory?._id === category._id
+    ) {
+      this.closeMenuItemsForCategory();
+      return;
+    }
+
+    this.selectedMenuCategory.set(category);
+    this.selectedMenuItem.set(null);
+  }
+
+  // Close menu item management
+  closeMenuItemsForCategory(): void {
+    this.selectedMenuCategory.set(null);
+    this.selectedMenuItem.set(null);
+  }
+
+  // Return menu items for selected category
+  getMenuItemsForSelectedCategory(): MenuItem[] {
+    const category = this.selectedMenuCategory();
+
+    if (!category) {
+      return [];
+    }
+
+    return this.menuItems().filter((item) => {
+      if (typeof item.category === 'string') {
+        return item.category === category._id;
+      }
+
+      return item.category._id === category._id;
+    });
+  }
+
+  // Open overlay for new menu item
+  openNewMenuItem(): void {
+    const category = this.selectedMenuCategory();
+
+    if (!category) {
+      return;
+    }
+
+    this.isCreatingMenuItem.set(true);
+    this.menuItemValidationErrors.set([]);
+    this.menuItemErrorMessage.set('');
+
+    this.editableMenuItem = {
+      id: '',
+      name: '',
+      description: '',
+      category: category._id,
+      price: 0,
+      protein: 'none',
+      spiceLevel: 0,
+      isAvailable: true,
+    };
+
+    this.selectedMenuItem.set(this.editableMenuItem);
+  }
+
+  // Open overlay for existing menu item
+  openMenuItem(menuItem: MenuItem): void {
+    this.isCreatingMenuItem.set(false);
+    this.menuItemValidationErrors.set([]);
+    this.menuItemErrorMessage.set('');
+
+    this.editableMenuItem = {
+      id: menuItem._id,
+      name: menuItem.name,
+      description: menuItem.description,
+      category:
+        typeof menuItem.category === 'string'
+          ? menuItem.category
+          : menuItem.category._id,
+      price: menuItem.price,
+      protein: menuItem.protein || 'none',
+      spiceLevel: menuItem.spiceLevel || 0,
+      isAvailable: menuItem.isAvailable,
+    };
+
+    this.selectedMenuItem.set(this.editableMenuItem);
+  }
+
+  // Close menu item overlay
+  closeMenuItem(): void {
+    this.selectedMenuItem.set(null);
+    this.isCreatingMenuItem.set(false);
+    this.menuItemValidationErrors.set([]);
+    this.menuItemErrorMessage.set('');
+  }
+
+  // Save menu item
+  saveMenuItem(): void {
+    const menuItem = this.selectedMenuItem();
+
+    if (!menuItem) {
+      return;
+    }
+
+    if (!this.validateMenuItem()) {
+      return;
+    }
+
+    this.isSavingMenuItem.set(true);
+    this.menuItemErrorMessage.set('');
+
+    const menuItemPayload = {
+      name: menuItem.name.trim(),
+      description: menuItem.description.trim(),
+      category: menuItem.category,
+      price: menuItem.price,
+      protein: menuItem.protein,
+      spiceLevel: menuItem.spiceLevel,
+      isAvailable: menuItem.isAvailable,
+    };
+
+    const request = this.isCreatingMenuItem()
+      ? this.menuService.createMenuItem(menuItemPayload)
+      : this.menuService.updateMenuItem(menuItem.id, menuItemPayload);
+
+    request.subscribe({
+      next: () => {
+        this.loadMenuItems();
+        this.closeMenuItem();
+        this.isSavingMenuItem.set(false);
+      },
+      error: () => {
+        this.menuItemErrorMessage.set('Rätten kunde inte sparas.');
+        this.isSavingMenuItem.set(false);
+      },
+    });
+  }
+
+  // Validate menu item before saving
+  validateMenuItem(): boolean {
+    const errors: string[] = [];
+
+    if (!this.editableMenuItem.name.trim()) {
+      errors.push('Rätten måste ha ett namn.');
+    }
+
+    if (!this.editableMenuItem.description.trim()) {
+      errors.push('Rätten måste ha en beskrivning.');
+    }
+
+    if (!this.editableMenuItem.category) {
+      errors.push('Rätten måste tillhöra en kategori.');
+    }
+
+    if (this.editableMenuItem.price <= 0) {
+      errors.push('Priset måste vara högre än 0 kr.');
+    }
+
+    if (
+      this.editableMenuItem.spiceLevel < 0 ||
+      this.editableMenuItem.spiceLevel > 3
+    ) {
+      errors.push('Styrkan måste vara mellan 0 och 3.');
+    }
+
+    this.menuItemValidationErrors.set(errors);
+
+    return errors.length === 0;
   }
 
   // Open overlay for new category

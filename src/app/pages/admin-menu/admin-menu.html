@@ -33,10 +33,56 @@
                     Redigera kategori
                 </button>
 
-                <button type="button">
-                    Hantera rätter
+                <button type="button" (click)="openMenuItemsForCategory(category)">
+                    {{ selectedMenuCategory()?._id === category._id ? 'Stäng' : 'Hantera rätter'}}
                 </button>
             </div>
+
+            @if (selectedMenuCategory()?._id === category._id) {
+            <section class="category-menu-items">
+                <div class="category-menu-items-header">
+                    <h3>Rätter i {{ category.name }}</h3>
+
+                    <button type="button" (click)="openNewMenuItem()">
+                        + Lägg till rätt
+                    </button>
+                </div>
+
+                @for (item of getMenuItemsForSelectedCategory(); track item._id) {
+                <article class="menu-item-card">
+
+                    <h4>{{ item.name }}</h4>
+
+                    <p>{{ item.description }}</p>
+
+                    <div class="menu-item-card__footer">
+
+                        <div class="menu-item-card__icons">
+
+                            @for (spice of getSpiceIcons(item.spiceLevel); track $index) {
+                            <iconify-icon icon="icon-park-outline:chili"></iconify-icon>
+                            }
+
+                            @if (getProteinIcon(item.protein)) {
+                            <iconify-icon [icon]="getProteinIcon(item.protein)"></iconify-icon>
+                            }
+
+                        </div>
+
+                        <p class="menu-item-card__price">
+                            {{ item.price }} kr
+                        </p>
+
+                    </div>
+
+                    <button type="button" (click)="openMenuItem(item)">
+                        Redigera
+                    </button>
+
+                </article>
+                }
+            </section>
+            }
 
         </article>
 

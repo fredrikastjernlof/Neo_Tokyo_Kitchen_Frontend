@@ -17,13 +17,19 @@ export interface MenuCategory {
   isActive: boolean;
 }
 
+export interface DietaryOptions {
+  vegan: boolean;
+  vegetarian: boolean;
+  glutenFree: boolean;
+}
+
 export interface MenuItem {
   _id: string;
   name: string;
   description: string;
   category: MenuCategory | string;
   price: number;
-  dietary?: string[];
+  dietary?: DietaryOptions;
   protein?: string;
   spiceLevel?: number;
   tags?: string[];
@@ -56,6 +62,41 @@ export class MenuService {
 
   getMenuItems(): Observable<MenuItem[]> {
     return this.http.get<MenuItem[]>(`${this.apiUrl}/menu-items`);
+  }
+
+  // Create menu item
+  createMenuItem(menuItem: Partial<MenuItem>): Observable<MenuItem> {
+    return this.http.post<MenuItem>(
+      `${this.apiUrl}/menu-items`,
+      menuItem,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Update menu item
+  updateMenuItem(
+    id: string,
+    menuItem: Partial<MenuItem>
+  ): Observable<MenuItem> {
+    return this.http.put<MenuItem>(
+      `${this.apiUrl}/menu-items/${id}`,
+      menuItem,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Delete menu item
+  deleteMenuItem(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/menu-items/${id}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   // Create category
