@@ -123,6 +123,9 @@ export class AdminMenu implements OnInit {
       chicken: 'fluent-emoji-high-contrast:chicken',
       duck: 'hugeicons:rubber-duck',
       tofu: 'lucide:sprout',
+      salmon: 'majesticons:fish-line',
+      shrimp: 'tdesign:shrimp',
+      seafood: 'hugeicons:crab',
       none: '',
     };
 

@@ -191,6 +191,139 @@
     </section>
     }
 
+    @if (selectedMenuItem()) {
+    <section class="category-overlay" role="dialog" aria-modal="true" aria-labelledby="menu-item-overlay-title">
+        <div class="category-overlay-content">
+
+            <div class="overlay-header">
+                <h2 id="menu-item-overlay-title">
+                    {{ isCreatingMenuItem() ? 'Ny rätt' : 'Redigera rätt' }}
+                </h2>
+
+                <button type="button" class="close-button" (click)="closeMenuItem()" aria-label="Stäng rättfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                {{ isCreatingMenuItem()
+                ? 'Lägg till en ny rätt i den valda kategorin.'
+                : 'Ändra informationen för rätten och kontrollera förhandsvisningen innan du sparar.' }}
+            </p>
+
+            @if (menuItemErrorMessage()) {
+            <p class="validation-errors">
+                {{ menuItemErrorMessage() }}
+            </p>
+            }
+
+            <form (ngSubmit)="saveMenuItem()">
+
+                <div class="form-group">
+                    <label for="menu-item-name">Namn</label>
+                    <input id="menu-item-name" type="text" name="menu-item-name" [(ngModel)]="editableMenuItem.name">
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-description">Beskrivning</label>
+                    <textarea id="menu-item-description" name="menu-item-description" rows="4"
+                        [(ngModel)]="editableMenuItem.description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-price">Pris</label>
+                    <input id="menu-item-price" type="number" name="menu-item-price" min="0"
+                        [(ngModel)]="editableMenuItem.price">
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-protein">Protein</label>
+                    <select id="menu-item-protein" name="menu-item-protein" [(ngModel)]="editableMenuItem.protein">
+                        <option value="none">Vegetarisk / inget kött</option>
+                        <option value="beef">Nötkött</option>
+                        <option value="pork">Fläsk</option>
+                        <option value="chicken">Kyckling</option>
+                        <option value="duck">Anka</option>
+                        <option value="tofu">Tofu</option>
+                        <option value="salmon">Lax</option>
+                        <option value="shrimp">Räkor</option>
+                        <option value="seafood">Skaldjur</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-spice">Styrka</label>
+                    <select id="menu-item-spice" name="menu-item-spice" [(ngModel)]="editableMenuItem.spiceLevel">
+                        <option [ngValue]="0">Inte stark</option>
+                        <option [ngValue]="1">Mild</option>
+                        <option [ngValue]="2">Stark</option>
+                        <option [ngValue]="3">Mycket stark</option>
+                    </select>
+                </div>
+
+                @if (menuItemValidationErrors().length > 0) {
+                <section class="validation-errors">
+                    <h3>Kontrollera formuläret</h3>
+
+                    <ul>
+                        @for (error of menuItemValidationErrors(); track error) {
+                        <li>{{ error }}</li>
+                        }
+                    </ul>
+                </section>
+                }
+
+                <section class="category-edit-preview" aria-label="Förhandsvisning av rätt">
+                    <h3>Förhandsvisning</h3>
+
+                    <article class="menu-item-card">
+                        <h4>{{ editableMenuItem.name || 'Rättens namn' }}</h4>
+
+                        <p>
+                            {{ editableMenuItem.description || 'Beskrivning av rätten visas här.' }}
+                        </p>
+
+                        <div class="menu-item-card__footer">
+                            <div class="menu-item-card__icons">
+
+                                @for (spice of getSpiceIcons(editableMenuItem.spiceLevel); track $index) {
+                                <iconify-icon icon="icon-park-outline:chili"></iconify-icon>
+                                }
+
+                                @if (getProteinIcon(editableMenuItem.protein)) {
+                                <iconify-icon [icon]="getProteinIcon(editableMenuItem.protein)"></iconify-icon>
+                                }
+
+                            </div>
+
+                            <p class="menu-item-card__price">
+                                {{ editableMenuItem.price || 0 }} kr
+                            </p>
+                        </div>
+                    </article>
+                </section>
+
+                <div class="overlay-actions">
+                    @if (!isCreatingMenuItem()) {
+                    <button type="button" class="admin-menu__delete-button">
+                        Radera
+                    </button>
+                    }
+
+                    <button type="button" class="admin-menu__cancel-button" (click)="closeMenuItem()">
+                        Avbryt
+                    </button>
+
+                    <button type="submit" class="admin-menu__save-button">
+                        {{ isSavingMenuItem() ? 'Sparar...' : 'Spara rätt' }}
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </section>
+    }
+
     @if (showDeleteConfirmation()) {
     <section class="category-overlay" role="dialog" aria-modal="true">
         <div class="category-overlay-content delete-confirmation">
