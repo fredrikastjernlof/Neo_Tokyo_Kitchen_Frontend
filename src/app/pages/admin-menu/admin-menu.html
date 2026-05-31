@@ -17,7 +17,8 @@
 
         <article class="category-card">
 
-            <div class="category-preview">
+            <div class="category-preview"
+                [style.background-image]=" category.image?.path ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(category.image?.path) + ')' : null ">
                 <span class="category-preview-title">
                     {{ category.name }}
                 </span>
@@ -57,6 +58,13 @@
                 </button>
             </div>
 
+            @if (categoryErrorMessage()) {
+            <p class="validation-errors">
+                {{ categoryErrorMessage() }}
+            </p>
+            }
+
+
             <form (ngSubmit)="saveCategory()">
                 <div class="form-group">
                     <label for="category-name">Namn</label>
@@ -70,6 +78,24 @@
                         [(ngModel)]="editableCategory.description"
                         [class.input-error]="categoryValidationErrors().includes('Kategorin måste ha en beskrivning.')"></textarea>
                 </div>
+
+                <div class="form-group">
+                    <label for="category-image">Kategoribild</label>
+
+                    <input id="category-image" type="file" name="category-image"
+                        accept="image/jpeg, image/jpg, image/png, image/webp" (change)="onCategoryImageSelected($event)"
+                        hidden>
+                    <label for="category-image" class="image-upload-button">
+                        {{ selectedImageFile ? selectedImageFile.name : '+ Välj bild' }}
+                    </label>
+                    @if (selectedImageFile) {
+                    <button type="button" class="remove-image-button" (click)="removeSelectedImage()">
+                        - Ta bort vald bild
+                    </button>
+                    }
+                </div>
+
+
 
                 @if (categoryValidationErrors().length > 0) {
                 <section class="validation-errors">
@@ -86,7 +112,8 @@
                 <section class="category-edit-preview" aria-label="Förhandsvisning av kategori">
                     <h3>Förhandsvisning</h3>
 
-                    <div class="category-preview">
+                    <div class="category-preview"
+                        [style.background-image]="imagePreviewUrl() ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + imagePreviewUrl() + ')' : selectedCategory()?.image?.path ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(selectedCategory()?.image?.path) + ')' : 'none' ">
                         <span class="category-preview-title">
                             {{ editableCategory.name || 'Kategori' }}
                         </span>
@@ -96,12 +123,6 @@
                         {{ editableCategory.description || 'Ingen beskrivning tillagd.' }}
                     </p>
                 </section>
-
-                @if (categoryErrorMessage()) {
-                <p class="admin-menu__error">
-                    {{ categoryErrorMessage() }}
-                </p>
-                }
 
                 <div class="overlay-actions">
                     @if (!isCreatingCategory()) {

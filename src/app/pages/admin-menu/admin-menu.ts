@@ -11,6 +11,12 @@ interface EditableCategory {
   id: string;
   name: string;
   description: string;
+
+  image?: {
+    filename: string;
+    path: string;
+    altText?: string;
+  };
 }
 
 @Component({
@@ -32,6 +38,9 @@ export class AdminMenu implements OnInit {
   showDeleteConfirmation = signal(false);
   isDeletingCategory = signal(false);
   categoryValidationErrors = signal<string[]>([]);
+
+  selectedImageFile: File | null = null;
+  imagePreviewUrl = signal<string | null>(null);
 
   editableCategory: EditableCategory = {
     id: '',
@@ -65,6 +74,7 @@ export class AdminMenu implements OnInit {
       id: '',
       name: '',
       description: '',
+      image: undefined,
     };
 
     this.selectedCategory.set(this.editableCategory);
@@ -78,6 +88,7 @@ export class AdminMenu implements OnInit {
       id: category._id,
       name: category.name,
       description: category.description || '',
+      image: category.image,
     };
 
     this.selectedCategory.set(this.editableCategory);
@@ -99,6 +110,14 @@ export class AdminMenu implements OnInit {
       .replaceAll('ö', 'o')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '');
+  }
+
+  getCategoryImageUrl(imagePath?: string): string | null {
+    if (!imagePath) {
+      return null;
+    }
+
+    return `https://neo-tokyo-kitchen-api.onrender.com${imagePath}`;
   }
 
   // Save category
@@ -127,7 +146,31 @@ export class AdminMenu implements OnInit {
       : this.menuService.updateCategory(category.id, categoryPayload);
 
     request.subscribe({
-      next: () => {
+      next: (savedCategory) => {
+        if (this.selectedImageFile) {
+          this.menuService
+            .uploadCategoryImage(
+              savedCategory._id,
+              this.selectedImageFile,
+              savedCategory.name
+            )
+            .subscribe({
+              next: () => {
+                this.loadCategories();
+                this.closeCategory();
+                this.selectedImageFile = null;
+                this.imagePreviewUrl.set(null);
+                this.isSavingCategory.set(false);
+              },
+              error: () => {
+                this.categoryErrorMessage.set('Kategorin sparades, men bilden kunde inte laddas upp.');
+                this.isSavingCategory.set(false);
+              },
+            });
+
+          return;
+        }
+
         this.loadCategories();
         this.closeCategory();
         this.isSavingCategory.set(false);
@@ -196,5 +239,26 @@ export class AdminMenu implements OnInit {
     this.categoryValidationErrors.set(errors);
 
     return errors.length === 0;
+  }
+
+  onCategoryImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files?.length) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    this.selectedImageFile = file;
+
+    const previewUrl = URL.createObjectURL(file);
+
+    this.imagePreviewUrl.set(previewUrl);
+  }
+
+  removeSelectedImage(): void {
+    this.selectedImageFile = null;
+    this.imagePreviewUrl.set(null);
   }
 }

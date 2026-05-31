@@ -36,7 +36,7 @@ export interface MenuItem {
 })
 export class MenuService {
   private apiUrl = 'https://neo-tokyo-kitchen-api.onrender.com/api';
-
+  private imageBaseUrl = 'https://neo-tokyo-kitchen-api.onrender.com';
   constructor(
     private http: HttpClient,
     private authService: AuthService
@@ -93,6 +93,35 @@ export class MenuService {
   deleteCategory(id: string): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/categories/${id}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Get full image URL for category
+  getCategoryImageUrl(imagePath?: string): string | null {
+    if (!imagePath) {
+      return null;
+    }
+
+    return `${this.imageBaseUrl}${imagePath}`;
+  }
+
+  // Upload category image
+  uploadCategoryImage(
+    categoryId: string,
+    imageFile: File,
+    altText: string
+  ): Observable<MenuCategory> {
+    const formData = new FormData();
+
+    formData.append('image', imageFile);
+    formData.append('altText', altText);
+
+    return this.http.post<MenuCategory>(
+      `${this.apiUrl}/categories/${categoryId}/image`,
+      formData,
       {
         headers: this.getAuthHeaders(),
       }
