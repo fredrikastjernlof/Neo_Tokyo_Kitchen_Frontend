@@ -117,7 +117,7 @@ $color-white: #f5f5f5;
 }
 
 .menu-item h2 {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.6rem;
     color: $color-white;
     font-size: 1rem;
 }
@@ -128,8 +128,29 @@ $color-white: #f5f5f5;
     line-height: 1.5;
 }
 
+.menu-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+
+.menu-item-icons {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    color: $color-pink;
+}
+
+.menu-item-icons iconify-icon {
+    font-size: 1.3rem;
+}
+
 .menu-price {
-    margin-top: 0.5rem;
+    margin-top: 0;
     color: $color-pink;
     text-align: right;
+    white-space: nowrap;
+    font-weight: 600;
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import 'iconify-icon';
 
 
 // Import interfaces and service
@@ -10,6 +11,7 @@ import { MenuCategory, MenuItem, MenuService } from '../../services/menu.service
   imports: [CommonModule],
   templateUrl: './menu.html',
   styleUrl: './menu.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 // Run code when the component initializes
@@ -97,6 +99,26 @@ export class Menu implements OnInit {
   // Check if a category image has failed to load
   isCategoryImageBroken(categoryId: string): boolean {
     return this.brokenCategoryImages().includes(categoryId);
+  }
+
+  getProteinIcon(protein?: string): string {
+    const icons: Record<string, string> = {
+      beef: 'ph:cow',
+      pork: 'lucide-lab:pig',
+      chicken: 'fluent-emoji-high-contrast:chicken',
+      duck: 'hugeicons:rubber-duck',
+      tofu: 'lucide:sprout',
+      salmon: 'majesticons:fish-line',
+      shrimp: 'tdesign:shrimp',
+      seafood: 'hugeicons:crab',
+      none: '',
+    };
+
+    return icons[protein || 'none'] || '';
+  }
+
+  getSpiceIcons(spiceLevel?: number): number[] {
+    return Array(spiceLevel || 0).fill(0);
   }
 
 }

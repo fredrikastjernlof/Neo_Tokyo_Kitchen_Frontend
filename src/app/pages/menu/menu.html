@@ -34,9 +34,25 @@
 
                 <p>{{ item.description }}</p>
 
-                <p class="menu-price">
-                    {{ item.price }} kr
-                </p>
+                <div class="menu-item-footer">
+
+                    <div class="menu-item-icons">
+
+                        @for (spice of getSpiceIcons(item.spiceLevel); track $index) {
+                        <iconify-icon icon="icon-park-outline:chili"></iconify-icon>
+                        }
+
+                        @if (getProteinIcon(item.protein)) {
+                        <iconify-icon [icon]="getProteinIcon(item.protein)"></iconify-icon>
+                        }
+
+                    </div>
+
+                    <p class="menu-price">
+                        {{ item.price }} kr
+                    </p>
+
+                </div>
 
             </article>
             }
