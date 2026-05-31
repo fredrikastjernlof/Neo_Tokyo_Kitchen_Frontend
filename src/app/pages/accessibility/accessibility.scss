@@ -23,7 +23,8 @@ $color-white: #f5f5f5;
 .info-card h1 {
     color: $color-pink;
     text-align: center;
-    margin-bottom: 1.5rem;
+    font-size: clamp(2rem, 7vw, 3rem);
+    margin-bottom: 1rem;
 }
 
 .info-card h2 {
