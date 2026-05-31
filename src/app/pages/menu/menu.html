@@ -7,13 +7,18 @@
 
     <article class="menu-category">
 
-        <button type="button" class="category-button" (click)="toggleCategory(category._id)">
+        <button type="button" class="category-button" (click)="toggleCategory(category._id)"
+            [style.background-image]=" getCategoryImageUrl(category)
+            ? 'linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(category) + ')' : null ">
 
             <span class="category-title">
                 {{ category.name }}
             </span>
 
         </button>
+        <p class="category-description" [class.category-description--open]="openCategoryId() === category._id">
+            {{ category.description }}
+        </p>
 
         <!-- Show menu items if the category is open -->
         @if (openCategoryId() === category._id) {
