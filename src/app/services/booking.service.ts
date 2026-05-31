@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface BookingRequest {
   name: string;
@@ -31,7 +32,17 @@ export class BookingService {
   // Backend API URL
   private apiUrl = 'https://neo-tokyo-kitchen-api.onrender.com/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
+
+  // Create auth headers for protected routes
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`,
+    });
+  }
 
   // Send booking to the backend API
   createBooking(
@@ -41,6 +52,30 @@ export class BookingService {
     return this.http.post<BookingResponse>(
       `${this.apiUrl}/bookings`,
       booking
+    );
+  }
+
+  // Get all bookings from backend
+  getBookings(): Observable<BookingResponse[]> {
+    return this.http.get<BookingResponse[]>(
+      `${this.apiUrl}/bookings`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Update booking
+  updateBooking(
+    id: string,
+    booking: BookingRequest
+  ): Observable<BookingResponse> {
+    return this.http.put<BookingResponse>(
+      `${this.apiUrl}/bookings/${id}`,
+      booking,
+      {
+        headers: this.getAuthHeaders(),
+      }
     );
   }
 }

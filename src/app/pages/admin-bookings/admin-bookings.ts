@@ -1,8 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import {
+  BookingResponse,
+  BookingService,
+} from '../../services/booking.service';
 
 interface AdminBooking {
   id: string;
+  bookingNumber: string;
   name: string;
   email: string;
   phone: string;
@@ -17,34 +23,16 @@ interface AdminBooking {
   templateUrl: './admin-bookings.html',
   styleUrl: './admin-bookings.scss',
 })
-export class AdminBookings {
+export class AdminBookings implements OnInit {
   selectedDate = '';
 
-  bookings = signal<AdminBooking[]>([
-    {
-      id: '1',
-      name: 'Aiko Tanaka',
-      email: 'aiko@example.com',
-      phone: '0701234567',
-      date: '2026-05-30',
-      time: '19:00',
-      guests: 4,
-    },
-    {
-      id: '2',
-      name: 'Kenji Sato',
-      email: 'kenji@example.com',
-      phone: '0707654321',
-      date: '2026-05-30',
-      time: '20:00',
-      guests: 2,
-    },
-  ]);
+  bookings = signal<AdminBooking[]>([]);
 
   selectedBooking = signal<AdminBooking | null>(null);
 
   editableBooking: AdminBooking = {
     id: '',
+    bookingNumber: '',
     name: '',
     email: '',
     phone: '',
@@ -53,17 +41,74 @@ export class AdminBookings {
     guests: 2,
   };
 
-  // Save edited booking
-  saveBookingChanges(): void {
-    this.bookings.update((bookings) =>
-      bookings.map((booking) =>
-        booking.id === this.editableBooking.id
-          ? { ...this.editableBooking }
-          : booking
-      )
-    );
+  constructor(private bookingService: BookingService) { }
 
-    this.closeBooking();
+  ngOnInit(): void {
+    this.loadBookings();
+  }
+
+  // Load bookings from backend
+  loadBookings(): void {
+    this.bookingService.getBookings().subscribe({
+      next: (bookings) => {
+        this.bookings.set(
+          bookings.map((booking) => this.mapBooking(booking))
+        );
+      },
+      error: (error) => {
+        console.error('Could not load bookings', error);
+      },
+    });
+  }
+
+  // Convert backend booking to admin booking
+  private mapBooking(booking: BookingResponse): AdminBooking {
+    return {
+      id: booking._id,
+      bookingNumber: booking.bookingNumber,
+      name: booking.name,
+      email: booking.email,
+      phone: booking.phone,
+
+      // Keep original date and time from backend
+      date: booking.startTime.slice(0, 10),
+      time: booking.startTime.slice(11, 16),
+
+      guests: booking.guests,
+    };
+  }
+
+  // Save edited booking in backend
+  saveBookingChanges(): void {
+    const updatedBooking = {
+      name: this.editableBooking.name,
+      email: this.editableBooking.email,
+      phone: this.editableBooking.phone,
+      guests: this.editableBooking.guests,
+      startTime: `${this.editableBooking.date}T${this.editableBooking.time}`,
+    };
+
+    this.bookingService.updateBooking(
+      this.editableBooking.id,
+      updatedBooking
+    ).subscribe({
+      next: (booking) => {
+        const mappedBooking = this.mapBooking(booking);
+
+        this.bookings.update((bookings) =>
+          bookings.map((currentBooking) =>
+            currentBooking.id === mappedBooking.id
+              ? mappedBooking
+              : currentBooking
+          )
+        );
+
+        this.closeBooking();
+      },
+      error: (error) => {
+        console.error('Could not update booking', error);
+      },
+    });
   }
 
   // Open booking overlay

@@ -38,6 +38,7 @@
 
             <h2>{{ booking.name }}</h2>
 
+            <p>Bokningsnummer: {{ booking.bookingNumber }}</p>
             <p>{{ booking.date }} kl. {{ booking.time }}</p>
             <p>{{ booking.guests }} gäster</p>
 
@@ -107,6 +108,10 @@
                     <h3>Sammanfattning</h3>
 
                     <dl>
+                        <div>
+                            <dt>Nr</dt>
+                            <dd>{{ editableBooking.bookingNumber }}</dd>
+                        </div>
                         <div>
                             <dt>Namn</dt>
                             <dd>{{ editableBooking.name }}</dd>
