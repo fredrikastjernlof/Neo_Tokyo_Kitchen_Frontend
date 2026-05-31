@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import 'iconify-icon';
 
 import {
   BookingResponse,
@@ -22,6 +23,7 @@ interface AdminBooking {
   imports: [FormsModule],
   templateUrl: './admin-bookings.html',
   styleUrl: './admin-bookings.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AdminBookings implements OnInit {
 
@@ -29,6 +31,7 @@ export class AdminBookings implements OnInit {
   searchTerm = '';
 
 
+  // Computed booking values
   // Filter bookings by selected date and search term
   get filteredBookings(): AdminBooking[] {
     const search = this.searchTerm.toLowerCase().trim();
@@ -59,14 +62,13 @@ export class AdminBookings implements OnInit {
     );
   }
 
+  // Component state
   bookings = signal<AdminBooking[]>([]);
-
   selectedBooking = signal<AdminBooking | null>(null);
-
   showDeleteConfirmation = signal(false);
-
   validationErrors = signal<string[]>([]);
   invalidFields = signal<string[]>([]);
+  isCreatingBooking = signal(false);
 
   editableBooking: AdminBooking = {
     id: '',
@@ -85,18 +87,31 @@ export class AdminBookings implements OnInit {
     this.loadBookings();
   }
 
-  // Load bookings from backend
+  // Load upcoming bookings
   loadBookings(): void {
     this.bookingService.getBookings().subscribe({
       next: (bookings) => {
+        const now = new Date();
+
         this.bookings.set(
-          bookings.map((booking) => this.mapBooking(booking))
+          this.sortBookings(
+            bookings
+              .filter((booking) => new Date(booking.startTime) >= now)
+              .map((booking) => this.mapBooking(booking))
+          )
         );
       },
       error: (error) => {
         console.error('Could not load bookings', error);
       },
     });
+  }
+
+  // Sort bookings by date and time
+  private sortBookings(bookings: AdminBooking[]): AdminBooking[] {
+    return [...bookings].sort((a, b) =>
+      `${a.date}T${a.time}`.localeCompare(`${b.date}T${b.time}`)
+    );
   }
 
   // Convert backend booking to admin booking
@@ -122,6 +137,11 @@ export class AdminBookings implements OnInit {
       return;
     }
 
+    if (this.isCreatingBooking()) {
+      this.createAdminBooking();
+      return;
+    }
+
     const updatedBooking = {
       name: this.editableBooking.name,
       email: this.editableBooking.email,
@@ -138,10 +158,12 @@ export class AdminBookings implements OnInit {
         const mappedBooking = this.mapBooking(booking);
 
         this.bookings.update((bookings) =>
-          bookings.map((currentBooking) =>
-            currentBooking.id === mappedBooking.id
-              ? mappedBooking
-              : currentBooking
+          this.sortBookings(
+            bookings.map((currentBooking) =>
+              currentBooking.id === mappedBooking.id
+                ? mappedBooking
+                : currentBooking
+            )
           )
         );
 
@@ -153,30 +175,34 @@ export class AdminBookings implements OnInit {
     });
   }
 
-  // Open booking overlay
-  openBooking(booking: AdminBooking): void {
-    this.showDeleteConfirmation.set(false);
-    this.selectedBooking.set(booking);
-    this.editableBooking = { ...booking };
+  // Create new booking from admin
+  createAdminBooking(): void {
+    const newBooking = {
+      name: this.editableBooking.name,
+      email: this.editableBooking.email,
+      phone: this.editableBooking.phone,
+      guests: this.editableBooking.guests,
+      startTime: `${this.editableBooking.date}T${this.editableBooking.time}`,
+    };
+
+    this.bookingService.createBooking(newBooking).subscribe({
+      next: (booking) => {
+        this.bookings.update((bookings) =>
+          this.sortBookings([
+            this.mapBooking(booking),
+            ...bookings,
+          ])
+        );
+
+        this.closeBooking();
+      },
+      error: (error) => {
+        console.error('Could not create booking', error);
+      },
+    });
   }
 
-  // Close booking overlay
-  closeBooking(): void {
-    this.showDeleteConfirmation.set(false);
-    this.selectedBooking.set(null);
-  }
-
-  // Open delete confirmation
-  openDeleteConfirmation(): void {
-    this.showDeleteConfirmation.set(true);
-  }
-
-  // Close delete confirmation
-  closeDeleteConfirmation(): void {
-    this.showDeleteConfirmation.set(false);
-  }
-
-  // Delete booking
+   // Delete booking
   deleteBooking(): void {
     this.bookingService.deleteBooking(
       this.editableBooking.id
@@ -199,6 +225,51 @@ export class AdminBookings implements OnInit {
         );
       },
     });
+  }
+
+  // Open overlay for new booking
+  openNewBooking(): void {
+    this.showDeleteConfirmation.set(false);
+    this.isCreatingBooking.set(true);
+
+    this.editableBooking = {
+      id: '',
+      bookingNumber: '',
+      name: '',
+      email: '',
+      phone: '',
+      date: '',
+      time: '19:00',
+      guests: 2,
+    };
+
+    this.selectedBooking.set(this.editableBooking);
+  }
+  
+  // Open booking overlay
+  openBooking(booking: AdminBooking): void {
+    this.showDeleteConfirmation.set(false);
+    this.isCreatingBooking.set(false);
+
+    this.selectedBooking.set(booking);
+    this.editableBooking = { ...booking };
+  }
+
+  // Close booking overlay
+  closeBooking(): void {
+    this.showDeleteConfirmation.set(false);
+    this.isCreatingBooking.set(false);
+    this.selectedBooking.set(null);
+  }
+
+  // Open delete confirmation
+  openDeleteConfirmation(): void {
+    this.showDeleteConfirmation.set(true);
+  }
+
+  // Close delete confirmation
+  closeDeleteConfirmation(): void {
+    this.showDeleteConfirmation.set(false);
   }
 
   // Check if field has validation error

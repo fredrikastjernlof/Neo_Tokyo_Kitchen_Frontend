@@ -6,6 +6,10 @@
         Här kan personalen se, ändra och ta bort restaurangens bokningar.
     </p>
 
+    <button type="button" class="new-booking-button" (click)="openNewBooking()">
+       + Ny bokning
+    </button>
+
     <!-- Date filter -->
     <section class="booking-filter" aria-label="Filtrera bokningar">
         <label for="booking-date">
@@ -48,9 +52,20 @@
 
             <h2>{{ booking.name }}</h2>
 
-            <p>Bokningsnummer: {{ booking.bookingNumber }}</p>
-            <p>{{ booking.date }} kl. {{ booking.time }}</p>
-            <p>{{ booking.guests }} gäster</p>
+            <p>
+                <iconify-icon icon="mdi:ticket-outline"></iconify-icon>
+                {{ booking.bookingNumber }}
+            </p>
+
+            <p>
+                <iconify-icon icon="uil:calendar"></iconify-icon>
+                {{ booking.date }} kl. {{ booking.time }}
+            </p>
+
+            <p>
+                <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                {{ booking.guests }} gäster
+            </p>
 
             <button type="button" (click)="openBooking(booking)">
                 Visa / ändra
@@ -71,7 +86,7 @@
 
             <div class="overlay-header">
                 <h2 id="edit-booking-title">
-                    Redigera bokning
+                    {{ isCreatingBooking() ? 'Ny bokning' : 'Redigera bokning' }}
                 </h2>
 
                 <button type="button" class="close-button" (click)="closeBooking()"
@@ -83,37 +98,55 @@
             <form (ngSubmit)="saveBookingChanges()">
 
                 <div class="form-group">
-                    <label for="edit-name">Namn</label>
+                    <label for="edit-name">
+                        <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
+                        Namn
+                    </label>
                     <input id="edit-name" type="text" name="name" [(ngModel)]="editableBooking.name"
                         [class.input-error]="isInvalid('name')">
                 </div>
 
                 <div class="form-group">
-                    <label for="edit-email">E-post</label>
+                    <label for="edit-email">
+                        <iconify-icon icon="mdi:email-outline" aria-hidden="true"></iconify-icon>
+                        E-post
+                    </label>
                     <input id="edit-email" type="email" name="email" [(ngModel)]="editableBooking.email"
                         [class.input-error]="isInvalid('email')">
                 </div>
 
                 <div class="form-group">
-                    <label for="edit-phone">Telefon</label>
+                    <label for="edit-phone">
+                        <iconify-icon icon="mdi:phone-outline" ></iconify-icon>
+                        Telefon
+                    </label>
                     <input id="edit-phone" type="tel" name="phone" [(ngModel)]="editableBooking.phone"
                         [class.input-error]="isInvalid('phone')">
                 </div>
 
                 <div class="form-group">
-                    <label for="edit-date">Datum</label>
+                    <label for="edit-date">
+                        <iconify-icon icon="uil:calendar"></iconify-icon>
+                        Datum
+                    </label>
                     <input id="edit-date" type="date" name="date" [(ngModel)]="editableBooking.date"
                         [class.input-error]="isInvalid('date')">
                 </div>
 
                 <div class="form-group">
-                    <label for="edit-time">Tid</label>
+                    <label for="edit-time">
+                        <iconify-icon icon="tabler:clock"></iconify-icon>
+                        Tid
+                    </label>
                     <input id="edit-time" type="time" name="time" [(ngModel)]="editableBooking.time"
                         [class.input-error]="isInvalid('time')">
                 </div>
 
                 <div class="form-group">
-                    <label for="edit-guests">Antal gäster</label>
+                    <label for="edit-guests">
+                        <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                        Antal gäster
+                    </label>
                     <input id="edit-guests" type="number" name="guests" min="1" max="12"
                         [(ngModel)]="editableBooking.guests" [class.input-error]="isInvalid('guests')">
                 </div>
@@ -136,26 +169,39 @@
 
                     <dl>
                         <div>
-                            <dt>Nr</dt>
+                            <dt>
+                                <iconify-icon icon="mdi:ticket-outline"></iconify-icon>Nr</dt>
                             <dd>{{ editableBooking.bookingNumber }}</dd>
                         </div>
                         <div>
-                            <dt>Namn</dt>
+                            <dt>
+                                <iconify-icon icon="mdi:account-outline"></iconify-icon>
+                                Namn
+                            </dt>
                             <dd>{{ editableBooking.name }}</dd>
                         </div>
 
                         <div>
-                            <dt>Datum</dt>
+                            <dt>
+                                <iconify-icon icon="uil:calendar"></iconify-icon>
+                                Datum
+                            </dt>
                             <dd>{{ editableBooking.date }}</dd>
                         </div>
 
                         <div>
-                            <dt>Tid</dt>
+                            <dt>
+                                <iconify-icon icon="tabler:clock"></iconify-icon>
+                                Tid
+                            </dt>
                             <dd>{{ editableBooking.time }}</dd>
                         </div>
 
                         <div>
-                            <dt>Gäster</dt>
+                            <dt>
+                                <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                                Gäster
+                            </dt>
                             <dd>{{ editableBooking.guests }}</dd>
                         </div>
                     </dl>
@@ -163,16 +209,18 @@
 
                 <div class="overlay-actions">
                     <button type="submit">
-                        Spara ändringar
+                        {{ isCreatingBooking() ? 'Skapa bokning' : 'Spara ändringar' }}
                     </button>
 
                     <button type="button" (click)="closeBooking()">
                         Stäng
                     </button>
 
+                    @if (!isCreatingBooking()) {
                     <button type="button" class="danger-button" (click)="openDeleteConfirmation()">
                         Ta bort bokning
                     </button>
+                    }
                 </div>
 
             </form>
