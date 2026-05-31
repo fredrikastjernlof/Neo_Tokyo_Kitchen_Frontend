@@ -1,1 +1,107 @@
-<p>admin-menu works!</p>
+<section class="admin-menu">
+
+    <h1>Menyhantering</h1>
+
+    <p>
+        Hantera restaurangens kategorier och rätter.
+    </p>
+
+
+    <button type="button" class="new-category-button" (click)="openNewCategory()">
+        + Ny kategori
+    </button>
+
+    <section class="category-list" aria-label="Meny-kategorier">
+
+        @for (category of categories(); track category._id) {
+
+        <article class="category-card">
+
+            <div class="category-preview">
+                <span class="category-preview-title">
+                    {{ category.name }}
+                </span>
+            </div>
+
+            <p>
+                {{ category.description || 'Ingen beskrivning tillagd.' }}
+            </p>
+
+            <div class="category-actions">
+                <button type="button" (click)="openCategory(category)">
+                    Redigera kategori
+                </button>
+
+                <button type="button">
+                    Hantera rätter
+                </button>
+            </div>
+
+        </article>
+
+        }
+
+    </section>
+
+    @if (selectedCategory()) {
+    <section class="category-overlay" role="dialog" aria-modal="true" aria-labelledby="category-overlay-title">
+        <div class="category-overlay-content">
+
+            <div class="overlay-header">
+                <h2 id="category-overlay-title">
+                    {{ isCreatingCategory() ? 'Ny kategori' : 'Redigera kategori' }}
+                </h2>
+
+                <button type="button" class="close-button" (click)="closeCategory()" aria-label="Stäng kategorifönster">
+                    ✕
+                </button>
+            </div>
+
+            <form (ngSubmit)="saveCategory()">
+                <div class="form-group">
+                    <label for="category-name">Namn</label>
+                    <input id="category-name" type="text" name="category-name" [(ngModel)]="editableCategory.name">
+                </div>
+
+                <div class="form-group">
+                    <label for="category-description">Beskrivning</label>
+                    <textarea id="category-description" name="category-description" rows="4"
+                        [(ngModel)]="editableCategory.description"></textarea>
+                </div>
+
+                <section class="category-edit-preview" aria-label="Förhandsvisning av kategori">
+                    <h3>Förhandsvisning</h3>
+
+                    <div class="category-preview">
+                        <span class="category-preview-title">
+                            {{ editableCategory.name || 'Kategori' }}
+                        </span>
+                    </div>
+
+                    <p>
+                        {{ editableCategory.description || 'Ingen beskrivning tillagd.' }}
+                    </p>
+                </section>
+
+                @if (categoryErrorMessage()) {
+                <p class="admin-menu__error">
+                    {{ categoryErrorMessage() }}
+                </p>
+                }
+
+                <div class="overlay-actions">
+                    <button type="submit" class="admin-menu__save-button">
+                        {{ isSavingCategory() ? 'Sparar...' : 'Spara kategori' }}
+                    </button>
+
+                    <button type="button" (click)="closeCategory()">
+                        Stäng
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </section>
+    }
+
+</section>

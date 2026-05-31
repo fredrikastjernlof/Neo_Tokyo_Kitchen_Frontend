@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface MenuCategory {
   _id: string;
@@ -36,7 +37,18 @@ export interface MenuItem {
 export class MenuService {
   private apiUrl = 'https://neo-tokyo-kitchen-api.onrender.com/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
+
+  // Create auth headers for protected routes
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`,
+    });
+  }
+
 
   getCategories(): Observable<MenuCategory[]> {
     return this.http.get<MenuCategory[]>(`${this.apiUrl}/categories`);
@@ -44,6 +56,47 @@ export class MenuService {
 
   getMenuItems(): Observable<MenuItem[]> {
     return this.http.get<MenuItem[]>(`${this.apiUrl}/menu-items`);
+  }
+
+  // Create category
+  createCategory(category: {
+    name: string;
+    description?: string;
+  }): Observable<MenuCategory> {
+    return this.http.post<MenuCategory>(
+      `${this.apiUrl}/categories`,
+      category,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Update category
+  updateCategory(
+    id: string,
+    category: {
+      name: string;
+      description?: string;
+    }
+  ): Observable<MenuCategory> {
+    return this.http.put<MenuCategory>(
+      `${this.apiUrl}/categories/${id}`,
+      category,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Delete category
+  deleteCategory(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/categories/${id}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
 }
