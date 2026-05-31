@@ -1,1 +1,87 @@
-<p>admin-staff works!</p>
+<section class="admin-staff">
+
+    <h1>Lägg till personal</h1>
+
+    <p>
+        Här kan personal registrerad som "Admin" skapa nya användare för restaurangens personalsidor.
+    </p>
+
+    @if (userErrorMessage()) {
+    <p class="validation-errors">
+        {{ userErrorMessage() }}
+    </p>
+    }
+
+    <form class="staff-form" (ngSubmit)="createUser()">
+
+        <div class="form-group">
+            <label for="staff-name">Namn</label>
+            <input id="staff-name" type="text" name="staff-name" [(ngModel)]="editableUser.name"
+                [class.input-error]="isInvalidUserField('staff-name')">
+        </div>
+
+        <div class="form-group">
+            <label for="staff-email">E-post</label>
+            <input id="staff-email" type="email" name="staff-email" [(ngModel)]="editableUser.email"
+                [class.input-error]="isInvalidUserField('staff-email')">
+        </div>
+
+        <div class="form-group">
+            <label for="staff-password">Lösenord</label>
+            <input id="staff-password" type="password" name="staff-password" [(ngModel)]="editableUser.password"
+                [class.input-error]="isInvalidUserField('staff-password')">
+        </div>
+
+        <div class="form-group">
+            <label for="staff-confirm-password"> Bekräfta lösenord </label>
+            <input id="staff-confirm-password" type="password" name="staff-confirm-password"
+                [(ngModel)]="editableUser.confirmPassword"
+                [class.input-error]="isInvalidUserField('staff-confirm-password')">
+        </div>
+
+        <div class="form-group">
+            <label for="staff-role">Roll</label>
+            <select id="staff-role" name="staff-role" [(ngModel)]="editableUser.role"
+                [class.input-error]="isInvalidUserField('staff-role')">
+                <option value="staff">Personal</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+
+        @if (userValidationErrors().length > 0) {
+        <section class="validation-errors">
+            <h2>Kontrollera formuläret</h2>
+
+            <ul>
+                @for (error of userValidationErrors(); track error) {
+                <li>{{ error }}</li>
+                }
+            </ul>
+        </section>
+        }
+
+
+        <button type="submit">
+            {{ isSavingUser() ? 'Skapar...' : 'Skapa användare' }}
+        </button>
+    </form>
+
+    @if (showUserCreatedModal()) {
+    <section class="staff-overlay" role="dialog" aria-modal="true">
+        <div class="staff-overlay-content">
+
+            <h2>Användare skapad</h2>
+
+            <p>
+                {{ createdUserName() }} har lagts till som personal.
+            </p>
+
+            <button type="button" (click)="showUserCreatedModal.set(false)">
+                Stäng
+            </button>
+
+        </div>
+    </section>
+    }
+
+</section>

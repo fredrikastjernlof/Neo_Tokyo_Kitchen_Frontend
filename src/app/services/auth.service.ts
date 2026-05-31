@@ -2,9 +2,19 @@ import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
+
+// Interfaces
 export interface LoginRequest {
   email: string;
   password: string;
+}
+
+export interface RegisterUserRequest {
+  name: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'staff';
 }
 
 export interface AuthUser {
@@ -15,6 +25,7 @@ export interface AuthUser {
   token: string;
 }
 
+// Service for handling authentication and user management
 @Injectable({
   providedIn: 'root',
 })
@@ -35,7 +46,7 @@ export class AuthService {
     this.currentUser()?.role === 'admin'
   );
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(credentials: LoginRequest): Observable<AuthUser> {
     return this.http.post<AuthUser>(
@@ -60,5 +71,19 @@ export class AuthService {
 
   getToken(): string | null {
     return this.currentUser()?.token || null;
+  }
+
+  registerUser(
+    user: RegisterUserRequest
+  ): Observable<AuthUser> {
+    return this.http.post<AuthUser>(
+      `${this.apiUrl}/register`,
+      user,
+      {
+        headers: {
+          Authorization: `Bearer ${this.getToken()}`,
+        },
+      }
+    );
   }
 }
