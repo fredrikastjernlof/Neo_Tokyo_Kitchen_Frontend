@@ -221,24 +221,28 @@
 
                 <div class="form-group">
                     <label for="menu-item-name">Namn</label>
-                    <input id="menu-item-name" type="text" name="menu-item-name" [(ngModel)]="editableMenuItem.name">
+                    <input id="menu-item-name" type="text" name="menu-item-name" [(ngModel)]="editableMenuItem.name"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-name')">
                 </div>
 
                 <div class="form-group">
                     <label for="menu-item-description">Beskrivning</label>
                     <textarea id="menu-item-description" name="menu-item-description" rows="4"
-                        [(ngModel)]="editableMenuItem.description"></textarea>
+                        [(ngModel)]="editableMenuItem.description"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-description')"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="menu-item-price">Pris</label>
                     <input id="menu-item-price" type="number" name="menu-item-price" min="0"
-                        [(ngModel)]="editableMenuItem.price">
+                        [(ngModel)]="editableMenuItem.price"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-price')">
                 </div>
 
                 <div class="form-group">
                     <label for="menu-item-protein">Protein</label>
-                    <select id="menu-item-protein" name="menu-item-protein" [(ngModel)]="editableMenuItem.protein">
+                    <select id="menu-item-protein" name="menu-item-protein" [(ngModel)]="editableMenuItem.protein"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-protein')">
                         <option value="none">Vegetarisk / inget kött</option>
                         <option value="beef">Nötkött</option>
                         <option value="pork">Fläsk</option>
@@ -253,7 +257,8 @@
 
                 <div class="form-group">
                     <label for="menu-item-spice">Styrka</label>
-                    <select id="menu-item-spice" name="menu-item-spice" [(ngModel)]="editableMenuItem.spiceLevel">
+                    <select id="menu-item-spice" name="menu-item-spice" [(ngModel)]="editableMenuItem.spiceLevel"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-spice')">
                         <option [ngValue]="0">Inte stark</option>
                         <option [ngValue]="1">Mild</option>
                         <option [ngValue]="2">Stark</option>
@@ -305,7 +310,7 @@
 
                 <div class="overlay-actions">
                     @if (!isCreatingMenuItem()) {
-                    <button type="button" class="admin-menu__delete-button">
+                    <button type="button" class="admin-menu__delete-button" (click)="openMenuItemDeleteConfirmation()">
                         Radera
                     </button>
                     }
@@ -320,6 +325,42 @@
                 </div>
 
             </form>
+        </div>
+    </section>
+    }
+
+    @if (showMenuItemDeleteConfirmation()) {
+    <section class="category-overlay" role="dialog" aria-modal="true">
+        <div class="category-overlay-content delete-confirmation">
+
+            <div class="overlay-header">
+                <h2>Radera rätt?</h2>
+
+                <button type="button" class="close-button" (click)="closeMenuItemDeleteConfirmation()"
+                    aria-label="Stäng raderingsfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                Vill du radera
+                <strong>{{ menuItemToDelete()?.name }}</strong>?
+            </p>
+
+            <p>
+                Detta går inte att ångra.
+            </p>
+
+            <div class="overlay-actions">
+                <button type="button" class="admin-menu__cancel-button" (click)="closeMenuItemDeleteConfirmation()">
+                    Avbryt
+                </button>
+
+                <button type="button" class="admin-menu__delete-confirm-button" (click)="deleteMenuItem()">
+                    {{ isDeletingMenuItem() ? 'Raderar...' : 'Ja, radera' }}
+                </button>
+            </div>
+
         </div>
     </section>
     }

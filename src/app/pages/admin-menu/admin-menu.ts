@@ -59,6 +59,10 @@ export class AdminMenu implements OnInit {
   isSavingMenuItem = signal(false);
   menuItemErrorMessage = signal('');
   menuItemValidationErrors = signal<string[]>([]);
+  invalidMenuItemFields = signal<string[]>([]);
+  showMenuItemDeleteConfirmation = signal(false);
+  isDeletingMenuItem = signal(false);
+  menuItemToDelete = signal<EditableMenuItem | null>(null);
 
   // Image upload state
   selectedImageFile: File | null = null;
@@ -278,21 +282,26 @@ export class AdminMenu implements OnInit {
   // Validate menu item before saving
   validateMenuItem(): boolean {
     const errors: string[] = [];
+    const invalidFields: string[] = [];
 
     if (!this.editableMenuItem.name.trim()) {
       errors.push('Rätten måste ha ett namn.');
+      invalidFields.push('menu-item-name');
     }
 
     if (!this.editableMenuItem.description.trim()) {
       errors.push('Rätten måste ha en beskrivning.');
+      invalidFields.push('menu-item-description');
     }
 
     if (!this.editableMenuItem.category) {
       errors.push('Rätten måste tillhöra en kategori.');
+      invalidFields.push('menu-item-category');
     }
 
     if (this.editableMenuItem.price <= 0) {
       errors.push('Priset måste vara högre än 0 kr.');
+      invalidFields.push('menu-item-price');
     }
 
     if (
@@ -300,11 +309,59 @@ export class AdminMenu implements OnInit {
       this.editableMenuItem.spiceLevel > 3
     ) {
       errors.push('Styrkan måste vara mellan 0 och 3.');
+      invalidFields.push('menu-item-spice');
     }
 
     this.menuItemValidationErrors.set(errors);
+    this.invalidMenuItemFields.set(invalidFields);
 
     return errors.length === 0;
+  }
+
+  // Check if a menu item field is invalid for validation styling
+  isInvalidMenuItemField(field: string): boolean {
+    return this.invalidMenuItemFields().includes(field);
+  }
+
+  openMenuItemDeleteConfirmation(): void {
+    const menuItem = this.selectedMenuItem();
+
+    if (!menuItem) {
+      return;
+    }
+
+    this.menuItemToDelete.set(menuItem);
+    this.showMenuItemDeleteConfirmation.set(true);
+  }
+
+  closeMenuItemDeleteConfirmation(): void {
+    this.menuItemToDelete.set(null);
+    this.showMenuItemDeleteConfirmation.set(false);
+  }
+
+// Delete menu item
+  deleteMenuItem(): void {
+    const menuItem = this.menuItemToDelete();
+
+    if (!menuItem) {
+      return;
+    }
+
+    this.isDeletingMenuItem.set(true);
+    this.menuItemErrorMessage.set('');
+
+    this.menuService.deleteMenuItem(menuItem.id).subscribe({
+      next: () => {
+        this.loadMenuItems();
+        this.closeMenuItemDeleteConfirmation();
+        this.closeMenuItem();
+        this.isDeletingMenuItem.set(false);
+      },
+      error: () => {
+        this.menuItemErrorMessage.set('Rätten kunde inte raderas.');
+        this.isDeletingMenuItem.set(false);
+      },
+    });
   }
 
   // Open overlay for new category

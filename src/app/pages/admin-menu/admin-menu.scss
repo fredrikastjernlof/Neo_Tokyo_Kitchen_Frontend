@@ -16,12 +16,9 @@ $color-glow: #ffb84d;
 
 .admin-menu h1 {
     margin-bottom: 0.75rem;
-    color: white;
+    color: $color-warm-white;
     text-align: center;
     text-transform: uppercase;
-    text-shadow:
-        0 0 2px #fff2c9,
-        0 0 4px $color-glow;
 }
 
 .admin-menu>p {
