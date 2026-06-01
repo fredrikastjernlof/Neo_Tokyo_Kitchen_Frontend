@@ -7,34 +7,45 @@
   </p>
 
   <!-- Admin shortcuts -->
-  <section
-    class="dashboard-cards"
-    aria-label="Snabbval för administration"
-  >
+  <section class="dashboard-cards" aria-label="Snabbval för administration">
 
-     <a routerLink="/admin/staff" class="dashboard-card">
-      <iconify-icon icon="mdi:account-group-outline"></iconify-icon>
+    <nav class="dashboard-navigation" aria-label="Administrationsmeny">
 
-      <h2>Personal</h2>
+      <ul class="dashboard-list">
 
-      <p>Hantera användarkonton.</p>
-    </a>
+        <li>
+          <a routerLink="/admin/staff" class="dashboard-card">
+            <iconify-icon icon="mdi:account-group-outline"></iconify-icon>
 
-    <a routerLink="/admin/bookings" class="dashboard-card">
-      <iconify-icon icon="uil:calendar"></iconify-icon>
+            <h2>Personal</h2>
 
-      <h2>Bokningar</h2>
+            <p>Hantera användarkonton.</p>
+          </a>
+        </li>
 
-      <p>Hantera restaurangens bokningar.</p>
-    </a>
+        <li>
+          <a routerLink="/admin/bookings" class="dashboard-card">
+            <iconify-icon icon="uil:calendar"></iconify-icon>
 
-    <a routerLink="/admin/menu" class="dashboard-card">
-      <iconify-icon icon="boxicons:food-menu"></iconify-icon>
+            <h2>Bokningar</h2>
 
-      <h2>Menyhantering</h2>
+            <p>Hantera restaurangens bokningar.</p>
+          </a>
+        </li>
 
-      <p>Hantera kategorier och maträtter.</p>
-    </a>
+        <li>
+          <a routerLink="/admin/menu" class="dashboard-card">
+            <iconify-icon icon="boxicons:food-menu"></iconify-icon>
+
+            <h2>Menyhantering</h2>
+
+            <p>Hantera kategorier och maträtter.</p>
+          </a>
+        </li>
+
+      </ul>
+
+    </nav>
 
   </section>
 
