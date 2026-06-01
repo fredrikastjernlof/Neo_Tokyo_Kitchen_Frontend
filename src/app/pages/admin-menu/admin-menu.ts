@@ -50,6 +50,7 @@ export class AdminMenu implements OnInit {
   showDeleteConfirmation = signal(false);
   isDeletingCategory = signal(false);
   categoryValidationErrors = signal<string[]>([]);
+  brokenCategoryImages = signal<string[]>([]);
 
   // Menu item state
   menuItems = signal<MenuItem[]>([]);
@@ -100,6 +101,10 @@ export class AdminMenu implements OnInit {
     this.menuService.getCategories().subscribe({
       next: (categories) => {
         this.categories.set(categories);
+
+        categories.forEach((category) => {
+          this.checkCategoryImage(category);
+        });
       },
       error: (error) => {
         console.error('Could not load categories', error);
@@ -339,7 +344,7 @@ export class AdminMenu implements OnInit {
     this.showMenuItemDeleteConfirmation.set(false);
   }
 
-// Delete menu item
+  // Delete menu item
   deleteMenuItem(): void {
     const menuItem = this.menuItemToDelete();
 
@@ -410,12 +415,60 @@ export class AdminMenu implements OnInit {
       .replace(/^-|-$/g, '');
   }
 
-  getCategoryImageUrl(imagePath?: string): string | null {
-    if (!imagePath) {
-      return null;
+  // Get category image URL with fallback
+  getCategoryImageUrl(category: MenuCategory): string {
+    const fallbackImages: Record<string, string> = {
+      ramen: 'images/categories/ramen.webp',
+      'rice-bowls': 'images/categories/rice-bowls.webp',
+      izakaya: 'images/categories/izakaya.webp',
+      desserts: 'images/categories/desserts.webp',
+      drinks: 'images/categories/drinks.webp',
+    };
+
+    if (
+      category.image?.path &&
+      !this.isCategoryImageBroken(category._id)
+    ) {
+      return `https://neo-tokyo-kitchen-api.onrender.com${category.image.path}`;
     }
 
-    return `https://neo-tokyo-kitchen-api.onrender.com${imagePath}`;
+    return fallbackImages[category.slug] ?? 'images/categories/fallback.webp';
+  }
+
+  // Mark category image as broken
+  markCategoryImageAsBroken(categoryId: string): void {
+    this.brokenCategoryImages.update((ids) => [...ids, categoryId]);
+  }
+
+  // Remove category from broken list when image loads successfully
+  markCategoryImageAsWorking(categoryId: string): void {
+    this.brokenCategoryImages.update((ids) =>
+      ids.filter((id) => id !== categoryId)
+    );
+  }
+
+  // Check if category image is marked as broken
+  isCategoryImageBroken(categoryId: string): boolean {
+    return this.brokenCategoryImages().includes(categoryId);
+  }
+
+  // Check if category image is valid by trying to load it
+  checkCategoryImage(category: MenuCategory): void {
+    if (!category.image?.path) {
+      return;
+    }
+
+    const image = new Image();
+
+    image.onload = () => {
+      this.markCategoryImageAsWorking(category._id);
+    };
+
+    image.onerror = () => {
+      this.markCategoryImageAsBroken(category._id);
+    };
+
+    image.src = `https://neo-tokyo-kitchen-api.onrender.com${category.image.path}`;
   }
 
   // Save category

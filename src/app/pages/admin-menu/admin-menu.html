@@ -6,7 +6,6 @@
         Hantera restaurangens kategorier och rätter.
     </p>
 
-
     <button type="button" class="new-category-button" (click)="openNewCategory()">
         + Ny kategori
     </button>
@@ -18,7 +17,7 @@
         <article class="category-card">
 
             <div class="category-preview"
-                [style.background-image]=" category.image?.path ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(category.image?.path) + ')' : null ">
+                [style.background-image]="'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(category) + ')'">
                 <span class="category-preview-title">
                     {{ category.name }}
                 </span>
@@ -110,7 +109,6 @@
             </p>
             }
 
-
             <form (ngSubmit)="saveCategory()">
                 <div class="form-group">
                     <label for="category-name">Namn</label>
@@ -141,8 +139,6 @@
                     }
                 </div>
 
-
-
                 @if (categoryValidationErrors().length > 0) {
                 <section class="validation-errors">
                     <h3>Kontrollera formuläret</h3>
@@ -159,7 +155,7 @@
                     <h3>Förhandsvisning</h3>
 
                     <div class="category-preview"
-                        [style.background-image]="imagePreviewUrl() ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + imagePreviewUrl() + ')' : selectedCategory()?.image?.path ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(selectedCategory()?.image?.path) + ')' : 'none' ">
+                        [style.background-image]="imagePreviewUrl() ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + imagePreviewUrl() + ')' : selectedCategory()?.image?.path ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(https://neo-tokyo-kitchen-api.onrender.com' + selectedCategory()?.image?.path + ')' : 'none'">
                         <span class="category-preview-title">
                             {{ editableCategory.name || 'Kategori' }}
                         </span>
