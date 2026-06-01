@@ -24,6 +24,11 @@ import { AdminNav } from './components/admin-nav/admin-nav';
 export class App {
   protected readonly title = signal('frontend');
 
+  focusMainContent() {
+    const mainContent = document.getElementById('main-content');
+    mainContent?.focus();
+  }
+
   isAdminRoute = signal(false);
   isAdminLoginRoute = signal(false);
 

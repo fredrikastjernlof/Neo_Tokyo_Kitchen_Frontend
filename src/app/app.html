@@ -1,3 +1,4 @@
+<button type="button" (click)="focusMainContent()" class="skip-link">Hoppa till innehåll</button>
 @if (isAdminRoute()) {
   <div [class.admin-login-wrapper]="isAdminLoginRoute()">
     <app-admin-header></app-admin-header>
@@ -11,7 +12,7 @@
   <app-main-nav></app-main-nav>
 }
 
-<main>
+<main id="main-content" tabindex="-1">
   <router-outlet></router-outlet>
 </main>
 
