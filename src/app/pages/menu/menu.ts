@@ -40,6 +40,10 @@ export class Menu implements OnInit {
     this.menuService.getCategories().subscribe({
       next: (categories) => {
         this.categories.set(categories);
+
+        categories.forEach((category) => {
+          this.checkCategoryImage(category);
+        });
       },
       error: (error) => {
         console.error('Fel vid hämtning av kategorier:', error);
@@ -80,15 +84,38 @@ export class Menu implements OnInit {
   }
 
   // Return the full image URL for a category image
-  getCategoryImageUrl(category: MenuCategory): string | null {
+  getCategoryImageUrl(category: MenuCategory): string {
+    const fallbackImages: Record<string, string> = {
+      ramen: 'images/categories/ramen.webp',
+      'rice-bowls': 'images/categories/rice-bowls.webp',
+      izakaya: 'images/categories/izakaya.webp',
+      desserts: 'images/categories/desserts.webp',
+      drinks: 'images/categories/drinks.webp',
+    };
 
-    // Return null if the category has no image
-    if (!category.image?.path) {
-      return null;
+    if (
+      category.image?.path &&
+      !this.isCategoryImageBroken(category._id)
+    ) {
+      return `https://neo-tokyo-kitchen-api.onrender.com${category.image.path}`;
     }
 
-    // Return full backend image URL
-    return `https://neo-tokyo-kitchen-api.onrender.com${category.image.path}`;
+    return fallbackImages[category.slug] ?? 'images/categories/fallback.webp';
+  }
+
+  // Check if a category image can be loaded successfully
+  checkCategoryImage(category: MenuCategory): void {
+    if (!category.image?.path) {
+      return;
+    }
+
+    const image = new Image();
+
+    image.onerror = () => {
+      this.markCategoryImageAsBroken(category._id);
+    };
+
+    image.src = `https://neo-tokyo-kitchen-api.onrender.com${category.image.path}`;
   }
 
   // Mark a category image as broken
