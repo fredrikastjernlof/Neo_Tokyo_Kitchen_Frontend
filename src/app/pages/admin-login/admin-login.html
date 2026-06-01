@@ -1,0 +1,51 @@
+<section class="admin-login-page">
+
+    <h1>Personal&shy;inloggning</h1>
+
+    <p class="admin-login-intro">
+        Logga in för att hantera meny, bokningar och personal.
+    </p>
+
+    <form class="admin-login-form" (ngSubmit)="login()">
+
+        <label for="email">E-post</label>
+        <input id="email" name="email" type="email" [(ngModel)]="email" (ngModelChange)="clearFieldError('email')" [class.input-error]="invalidFields().includes('email')">
+
+        <label for="password">Lösenord</label>
+        <input id="password" name="password" type="password" [(ngModel)]="password" (ngModelChange)="clearFieldError('password')" [class.input-error]="invalidFields().includes('password')">
+
+        @if (errorMessage()) {
+        <p class="admin-login-error" role="alert">
+            {{ errorMessage() }}
+        </p>
+        }
+
+        @if (validationErrors().length) {
+        <div class="validation-errors">
+
+            <p>Formuläret innehåller fel:</p>
+
+            <ul>
+                @for (error of validationErrors(); track error) {
+                <li>{{ error }}</li>
+                }
+            </ul>
+
+        </div>
+        }
+
+        <button type="submit" [disabled]="isLoading()">
+            @if (isLoading()) {
+            Loggar in...
+            } @else {
+            Logga in
+            }
+        </button>
+
+    </form>
+
+    <a routerLink="/" class="back-to-site">
+        ← Till startsidan
+    </a>
+
+</section>

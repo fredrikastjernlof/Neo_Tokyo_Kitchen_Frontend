@@ -1,0 +1,267 @@
+<section class="admin-bookings">
+
+    <h1>Bokningar</h1>
+
+    <p class="page-intro">
+        Här kan personalen se, ändra och ta bort restaurangens bokningar.
+    </p>
+
+    <button type="button" class="new-booking-button" (click)="openNewBooking()">
+        + Ny bokning
+    </button>
+
+    <!-- Date filter -->
+    <section class="booking-filter" aria-label="Filtrera bokningar">
+        <label for="booking-date">
+            Välj datum
+        </label>
+
+        <input id="booking-date" type="date" name="booking-date" [(ngModel)]="selectedDate">
+    </section>
+
+    <!-- Booking summary -->
+    <section class="booking-summary" aria-label="Sammanfattning för valt datum">
+
+        <article>
+            <h2>Bokningar</h2>
+            <p>{{ totalBookings }}</p>
+        </article>
+
+        <article>
+            <h2>Gäster totalt</h2>
+            <p>{{ totalGuests }}</p>
+        </article>
+
+    </section>
+
+    <!-- Booking search -->
+    <section class="booking-search" aria-label="Sök bokning">
+        <label for="booking-search">
+            Sök bokning
+        </label>
+
+        <input id="booking-search" type="search" name="booking-search"
+            placeholder="Sök på namn, telefon eller bokningsnummer" [(ngModel)]="searchTerm">
+    </section>
+
+    <!-- Booking list -->
+    <section class="booking-list" aria-label="Bokningslista">
+
+        @for (booking of filteredBookings; track booking.id) {
+        <article class="booking-card">
+
+            <h2>{{ booking.name }}</h2>
+
+            <p>
+                <iconify-icon icon="mdi:ticket-outline"></iconify-icon>
+                {{ booking.bookingNumber }}
+            </p>
+
+            <p>
+                <iconify-icon icon="uil:calendar"></iconify-icon>
+                {{ booking.date }} kl. {{ booking.time }}
+            </p>
+
+            <p>
+                <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                {{ booking.guests }} gäster
+            </p>
+
+            <button type="button" (click)="openBooking(booking)">
+                Visa / ändra
+            </button>
+
+        </article>
+        } @empty {
+        <p>Inga bokningar att visa.</p>
+        }
+
+    </section>
+
+    @if (selectedBooking()) {
+    <!-- Edit booking overlay -->
+    <section class="booking-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-booking-title">
+
+        <div class="booking-overlay-content">
+
+            <div class="overlay-header">
+                <h2 id="edit-booking-title">
+                    {{ isCreatingBooking() ? 'Ny bokning' : 'Redigera bokning' }}
+                </h2>
+
+                <button type="button" class="close-button" (click)="closeBooking()"
+                    aria-label="Stäng redigeringsfönster">
+                    ✕
+                </button>
+            </div>
+
+            <form (ngSubmit)="saveBookingChanges()">
+
+                <div class="form-group">
+                    <label for="edit-name">
+                        <iconify-icon icon="gravity-ui:person-pencil"></iconify-icon>
+                        Namn
+                    </label>
+                    <input id="edit-name" type="text" name="name" [(ngModel)]="editableBooking.name"
+                        [class.input-error]="isInvalid('name')">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-email">
+                        <iconify-icon icon="mdi:email-outline" aria-hidden="true"></iconify-icon>
+                        E-post
+                    </label>
+                    <input id="edit-email" type="email" name="email" [(ngModel)]="editableBooking.email"
+                        [class.input-error]="isInvalid('email')">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-phone">
+                        <iconify-icon icon="mdi:phone-outline"></iconify-icon>
+                        Telefon
+                    </label>
+                    <input id="edit-phone" type="tel" name="phone" [(ngModel)]="editableBooking.phone"
+                        [class.input-error]="isInvalid('phone')">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-date">
+                        <iconify-icon icon="uil:calendar"></iconify-icon>
+                        Datum
+                    </label>
+                    <input id="edit-date" type="date" name="date" [(ngModel)]="editableBooking.date"
+                        [class.input-error]="isInvalid('date')">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-time">
+                        <iconify-icon icon="tabler:clock"></iconify-icon>
+                        Tid
+                    </label>
+                    <input id="edit-time" type="time" name="time" [(ngModel)]="editableBooking.time"
+                        [class.input-error]="isInvalid('time')">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-guests">
+                        <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                        Antal gäster
+                    </label>
+                    <input id="edit-guests" type="number" name="guests" min="1" max="12"
+                        [(ngModel)]="editableBooking.guests" [class.input-error]="isInvalid('guests')">
+                </div>
+
+                @if (validationErrors().length > 0) {
+                <section class="validation-errors" role="alert">
+                    <h3>Kontrollera bokningen</h3>
+
+                    <ul>
+                        @for (error of validationErrors(); track error) {
+                        <li>{{ error }}</li>
+                        }
+                    </ul>
+                </section>
+                }
+
+                <!-- Live booking summary -->
+                <section class="booking-edit-summary" aria-label="Sammanfattning av ändringar">
+                    <h3>Sammanfattning</h3>
+
+                    <dl>
+                        <div>
+                            <dt>
+                                <iconify-icon icon="mdi:ticket-outline"></iconify-icon>Nr
+                            </dt>
+                            <dd>{{ editableBooking.bookingNumber }}</dd>
+                        </div>
+                        <div>
+                            <dt>
+                                <iconify-icon icon="mdi:account-outline"></iconify-icon>
+                                Namn
+                            </dt>
+                            <dd>{{ editableBooking.name }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>
+                                <iconify-icon icon="uil:calendar"></iconify-icon>
+                                Datum
+                            </dt>
+                            <dd>{{ editableBooking.date }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>
+                                <iconify-icon icon="tabler:clock"></iconify-icon>
+                                Tid
+                            </dt>
+                            <dd>{{ editableBooking.time }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>
+                                <iconify-icon icon="mingcute:group-3-line"></iconify-icon>
+                                Gäster
+                            </dt>
+                            <dd>{{ editableBooking.guests }}</dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <div class="overlay-actions">
+                    <button type="submit">
+                        {{ isCreatingBooking() ? 'Skapa bokning' : 'Spara ändringar' }}
+                    </button>
+
+                    <button type="button" (click)="closeBooking()">
+                        Stäng
+                    </button>
+
+                    @if (!isCreatingBooking()) {
+                    <button type="button" class="danger-button" (click)="openDeleteConfirmation()">
+                        Ta bort bokning
+                    </button>
+                    }
+                </div>
+
+            </form>
+
+        </div>
+
+    </section>
+    }
+
+    @if (showDeleteConfirmation()) {
+    <section class="booking-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-booking-title">
+        <div class="booking-overlay-content delete-confirmation">
+
+            <div class="overlay-header">
+                <h2 id="delete-booking-title">Ta bort bokning?</h2>
+
+                <button type="button" class="close-button" (click)="closeDeleteConfirmation()"
+                    aria-label="Stäng raderingsfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                Bokning <strong>{{ editableBooking.bookingNumber }}</strong>
+                kommer att tas bort permanent.
+            </p>
+
+            <p>Detta går inte att ångra.</p>
+
+            <div class="confirmation-actions">
+                <button type="button" (click)="closeDeleteConfirmation()">
+                    Avbryt
+                </button>
+
+                <button type="button" class="danger-button" (click)="deleteBooking()">
+                    Ja, ta bort
+                </button>
+            </div>
+
+        </div>
+    </section>
+    }
+</section>

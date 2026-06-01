@@ -1,0 +1,400 @@
+<section class="admin-menu">
+
+    <h1>Menyhantering</h1>
+
+    <p>
+        Hantera restaurangens kategorier och rätter.
+    </p>
+
+    <button type="button" class="new-category-button" (click)="openNewCategory()">
+        + Ny kategori
+    </button>
+
+    <section class="category-list" aria-label="Meny-kategorier">
+
+        @for (category of categories(); track category._id) {
+
+        <article class="category-card">
+
+            <div class="category-preview"
+                [style.background-image]="'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(category) + ')'">
+                <span class="category-preview-title">
+                    {{ category.name }}
+                </span>
+            </div>
+
+            <p>
+                {{ category.description || 'Ingen beskrivning tillagd.' }}
+            </p>
+
+            <div class="category-actions">
+                <button type="button" (click)="openCategory(category)">
+                    Redigera kategori
+                </button>
+
+                <button type="button" (click)="openMenuItemsForCategory(category)">
+                    {{ selectedMenuCategory()?._id === category._id ? 'Stäng' : 'Hantera rätter'}}
+                </button>
+            </div>
+
+            @if (selectedMenuCategory()?._id === category._id) {
+            <section class="category-menu-items">
+                <div class="category-menu-items-header">
+                    <h3>Rätter i {{ category.name }}</h3>
+
+                    <button type="button" (click)="openNewMenuItem()">
+                        + Lägg till rätt
+                    </button>
+                </div>
+
+                @for (item of getMenuItemsForSelectedCategory(); track item._id) {
+                <article class="menu-item-card">
+
+                    <h4>{{ item.name }}</h4>
+
+                    <p>{{ item.description }}</p>
+
+                    <div class="menu-item-card__footer">
+
+                        <div class="menu-item-card__icons">
+
+                            @for (spice of getSpiceIcons(item.spiceLevel); track $index) {
+                            <iconify-icon icon="icon-park-outline:chili"></iconify-icon>
+                            }
+
+                            @if (getProteinIcon(item.protein)) {
+                            <iconify-icon [icon]="getProteinIcon(item.protein)"></iconify-icon>
+                            }
+
+                        </div>
+
+                        <p class="menu-item-card__price">
+                            {{ item.price }} kr
+                        </p>
+
+                    </div>
+
+                    <button type="button" (click)="openMenuItem(item)">
+                        Redigera
+                    </button>
+
+                </article>
+                }
+            </section>
+            }
+
+        </article>
+
+        }
+
+    </section>
+
+    @if (selectedCategory()) {
+    <section class="category-overlay" role="dialog" aria-modal="true" aria-labelledby="category-overlay-title">
+        <div class="category-overlay-content">
+
+            <div class="overlay-header">
+                <h2 id="category-overlay-title">
+                    {{ isCreatingCategory() ? 'Ny kategori' : 'Redigera kategori' }}
+                </h2>
+
+                <button type="button" class="close-button" (click)="closeCategory()" aria-label="Stäng kategorifönster">
+                    ✕
+                </button>
+            </div>
+
+            @if (categoryErrorMessage()) {
+            <p class="validation-errors">
+                {{ categoryErrorMessage() }}
+            </p>
+            }
+
+            <form (ngSubmit)="saveCategory()">
+                <div class="form-group">
+                    <label for="category-name">Namn</label>
+                    <input id="category-name" type="text" name="category-name" [(ngModel)]="editableCategory.name"
+                        [class.input-error]="categoryValidationErrors().includes('Kategorin måste ha ett namn.')">
+                </div>
+
+                <div class="form-group">
+                    <label for="category-description">Beskrivning</label>
+                    <textarea id="category-description" name="category-description" rows="4"
+                        [(ngModel)]="editableCategory.description"
+                        [class.input-error]="categoryValidationErrors().includes('Kategorin måste ha en beskrivning.')"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="category-image">Kategoribild</label>
+
+                    <input id="category-image" type="file" name="category-image"
+                        accept="image/jpeg, image/jpg, image/png, image/webp" (change)="onCategoryImageSelected($event)"
+                        hidden>
+                    <label for="category-image" class="image-upload-button">
+                        {{ selectedImageFile ? selectedImageFile.name : '+ Välj bild' }}
+                    </label>
+                    @if (selectedImageFile) {
+                    <button type="button" class="remove-image-button" (click)="removeSelectedImage()">
+                        - Ta bort vald bild
+                    </button>
+                    }
+                </div>
+
+                @if (categoryValidationErrors().length > 0) {
+                <section class="validation-errors">
+                    <h3>Kontrollera formuläret</h3>
+
+                    <ul>
+                        @for (error of categoryValidationErrors(); track error) {
+                        <li>{{ error }}</li>
+                        }
+                    </ul>
+                </section>
+                }
+
+                <section class="category-edit-preview" aria-label="Förhandsvisning av kategori">
+                    <h3>Förhandsvisning</h3>
+
+                    <div class="category-preview"
+                        [style.background-image]="imagePreviewUrl() ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + imagePreviewUrl() + ')' : selectedCategory()?.image?.path ? 'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(https://neo-tokyo-kitchen-api.onrender.com' + selectedCategory()?.image?.path + ')' : 'none'">
+                        <span class="category-preview-title">
+                            {{ editableCategory.name || 'Kategori' }}
+                        </span>
+                    </div>
+
+                    <p>
+                        {{ editableCategory.description || 'Ingen beskrivning tillagd.' }}
+                    </p>
+                </section>
+
+                <div class="overlay-actions">
+                    @if (!isCreatingCategory()) {
+                    <button type="button" class="admin-menu__delete-button" (click)="openDeleteConfirmation()">
+                        Radera
+                    </button>
+                    }
+
+                    <button type="button" class="admin-menu__cancel-button" (click)="closeCategory()">
+                        Avbryt
+                    </button>
+
+                    <button type="submit" class="admin-menu__save-button">
+                        {{ isSavingCategory() ? 'Sparar...' : 'Spara kategori' }}
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </section>
+    }
+
+    @if (selectedMenuItem()) {
+    <section class="category-overlay" role="dialog" aria-modal="true" aria-labelledby="menu-item-overlay-title">
+        <div class="category-overlay-content">
+
+            <div class="overlay-header">
+                <h2 id="menu-item-overlay-title">
+                    {{ isCreatingMenuItem() ? 'Ny rätt' : 'Redigera rätt' }}
+                </h2>
+
+                <button type="button" class="close-button" (click)="closeMenuItem()" aria-label="Stäng rättfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                {{ isCreatingMenuItem()
+                ? 'Lägg till en ny rätt i den valda kategorin.'
+                : 'Ändra informationen för rätten och kontrollera förhandsvisningen innan du sparar.' }}
+            </p>
+
+            @if (menuItemErrorMessage()) {
+            <p class="validation-errors">
+                {{ menuItemErrorMessage() }}
+            </p>
+            }
+
+            <form (ngSubmit)="saveMenuItem()">
+
+                <div class="form-group">
+                    <label for="menu-item-name">Namn</label>
+                    <input id="menu-item-name" type="text" name="menu-item-name" [(ngModel)]="editableMenuItem.name"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-name')">
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-description">Beskrivning</label>
+                    <textarea id="menu-item-description" name="menu-item-description" rows="4"
+                        [(ngModel)]="editableMenuItem.description"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-description')"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-price">Pris</label>
+                    <input id="menu-item-price" type="number" name="menu-item-price" min="0"
+                        [(ngModel)]="editableMenuItem.price"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-price')">
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-protein">Protein</label>
+                    <select id="menu-item-protein" name="menu-item-protein" [(ngModel)]="editableMenuItem.protein"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-protein')">
+                        <option value="none">Vegetarisk / inget kött</option>
+                        <option value="beef">Nötkött</option>
+                        <option value="pork">Fläsk</option>
+                        <option value="chicken">Kyckling</option>
+                        <option value="duck">Anka</option>
+                        <option value="tofu">Tofu</option>
+                        <option value="salmon">Lax</option>
+                        <option value="shrimp">Räkor</option>
+                        <option value="seafood">Skaldjur</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="menu-item-spice">Styrka</label>
+                    <select id="menu-item-spice" name="menu-item-spice" [(ngModel)]="editableMenuItem.spiceLevel"
+                        [class.input-error]="isInvalidMenuItemField('menu-item-spice')">
+                        <option [ngValue]="0">Inte stark</option>
+                        <option [ngValue]="1">Mild</option>
+                        <option [ngValue]="2">Stark</option>
+                        <option [ngValue]="3">Mycket stark</option>
+                    </select>
+                </div>
+
+                @if (menuItemValidationErrors().length > 0) {
+                <section class="validation-errors">
+                    <h3>Kontrollera formuläret</h3>
+
+                    <ul>
+                        @for (error of menuItemValidationErrors(); track error) {
+                        <li>{{ error }}</li>
+                        }
+                    </ul>
+                </section>
+                }
+
+                <section class="category-edit-preview" aria-label="Förhandsvisning av rätt">
+                    <h3>Förhandsvisning</h3>
+
+                    <article class="menu-item-card">
+                        <h4>{{ editableMenuItem.name || 'Rättens namn' }}</h4>
+
+                        <p>
+                            {{ editableMenuItem.description || 'Beskrivning av rätten visas här.' }}
+                        </p>
+
+                        <div class="menu-item-card__footer">
+                            <div class="menu-item-card__icons">
+
+                                @for (spice of getSpiceIcons(editableMenuItem.spiceLevel); track $index) {
+                                <iconify-icon icon="icon-park-outline:chili"></iconify-icon>
+                                }
+
+                                @if (getProteinIcon(editableMenuItem.protein)) {
+                                <iconify-icon [icon]="getProteinIcon(editableMenuItem.protein)"></iconify-icon>
+                                }
+
+                            </div>
+
+                            <p class="menu-item-card__price">
+                                {{ editableMenuItem.price || 0 }} kr
+                            </p>
+                        </div>
+                    </article>
+                </section>
+
+                <div class="overlay-actions">
+                    @if (!isCreatingMenuItem()) {
+                    <button type="button" class="admin-menu__delete-button" (click)="openMenuItemDeleteConfirmation()">
+                        Radera
+                    </button>
+                    }
+
+                    <button type="button" class="admin-menu__cancel-button" (click)="closeMenuItem()">
+                        Avbryt
+                    </button>
+
+                    <button type="submit" class="admin-menu__save-button">
+                        {{ isSavingMenuItem() ? 'Sparar...' : 'Spara rätt' }}
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </section>
+    }
+
+    @if (showMenuItemDeleteConfirmation()) {
+    <section class="category-overlay" role="dialog" aria-modal="true">
+        <div class="category-overlay-content delete-confirmation">
+
+            <div class="overlay-header">
+                <h2>Radera rätt?</h2>
+
+                <button type="button" class="close-button" (click)="closeMenuItemDeleteConfirmation()"
+                    aria-label="Stäng raderingsfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                Vill du radera
+                <strong>{{ menuItemToDelete()?.name }}</strong>?
+            </p>
+
+            <p>
+                Detta går inte att ångra.
+            </p>
+
+            <div class="overlay-actions">
+                <button type="button" class="admin-menu__cancel-button" (click)="closeMenuItemDeleteConfirmation()">
+                    Avbryt
+                </button>
+
+                <button type="button" class="admin-menu__delete-confirm-button" (click)="deleteMenuItem()">
+                    {{ isDeletingMenuItem() ? 'Raderar...' : 'Ja, radera' }}
+                </button>
+            </div>
+
+        </div>
+    </section>
+    }
+
+    @if (showDeleteConfirmation()) {
+    <section class="category-overlay" role="dialog" aria-modal="true">
+        <div class="category-overlay-content delete-confirmation">
+
+            <div class="overlay-header">
+                <h2>Radera kategori?</h2>
+
+                <button type="button" class="close-button" (click)="closeDeleteConfirmation()"
+                    aria-label="Stäng raderingsfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                Vill du radera
+                <strong>{{ categoryToDelete()?.name }}</strong>?
+            </p>
+
+            <p>
+                Detta går inte att ångra.
+            </p>
+
+            <div class="overlay-actions">
+                <button type="button" class="admin-menu__cancel-button" (click)="closeDeleteConfirmation()">
+                    Avbryt
+                </button>
+
+                <button type="button" class="admin-menu__delete-confirm-button" (click)="deleteCategory()">
+                    {{ isDeletingCategory() ? 'Raderar...' : 'Ja, radera' }}
+                </button>
+            </div>
+
+        </div>
+    </section>
+    }
+
+</section>

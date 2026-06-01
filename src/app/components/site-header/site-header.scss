@@ -1,0 +1,20 @@
+/* ---------- VARIABLES ---------- */
+$font: 'Tilt Neon', sans-serif;
+
+$color-pink: #FF00B7;
+$color-blue: #00FFFB;
+$color-green: #65FF89;
+
+$color-bg: #222222;
+$color-black: #111111;
+$color-white: #f5f5f5;
+
+.site-header {
+    text-align: center;
+    background-color: $color-black;
+}
+.site-header img {
+    width: 100%;
+    height: auto;
+    margin-top: -0.5rem;
+}

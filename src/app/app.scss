@@ -1,0 +1,22 @@
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+  z-index: 2000;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  color: #0d250f;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+main:focus {
+    outline: none;
+}

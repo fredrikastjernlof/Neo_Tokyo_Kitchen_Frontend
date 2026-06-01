@@ -1,0 +1,51 @@
+$font: 'Tilt Neon', sans-serif;
+
+$color-pink: #FF00B7;
+$color-blue: #00FFFB;
+$color-green: #65FF89;
+
+$color-bg: #222222;
+$color-black: #111111;
+$color-white: #f5f5f5;
+
+.not-found {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: $color-black;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.not-found h2 {
+    margin: 0;
+    color: $color-pink;
+    font-size: clamp(3rem, 12vw, 6rem);
+    line-height: 1;
+}
+
+.not-found p {
+    color: $color-white;
+    line-height: 1.6;
+}
+
+.not-found-button {
+    justify-self: center;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 1rem;
+    background-color: $color-pink;
+    color: $color-white;
+    font-family: inherit;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.not-found-button:hover,
+.not-found-button:focus-visible {
+    box-shadow:
+        0 0 1.4rem rgba(255, 0, 183, 0.9);
+}

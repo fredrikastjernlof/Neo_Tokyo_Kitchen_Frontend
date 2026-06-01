@@ -1,0 +1,18 @@
+$color-black: #111111;
+
+:host {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.admin-header {
+  width: 100%;
+  text-align: center;
+  background-color: $color-black;
+}
+
+/* Rounded corners only on login page */
+:host(.admin-login-header) {
+  border-radius: 0 0 1rem 1rem;
+}

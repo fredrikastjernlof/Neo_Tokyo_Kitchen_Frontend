@@ -1,0 +1,65 @@
+$font: 'Tilt Neon', sans-serif;
+
+$color-pink: #FF00B7;
+$color-blue: #00FFFB;
+$color-green: #65FF89;
+
+$color-bg: #222222;
+$color-black: #111111;
+$color-white: #f5f5f5;
+
+.credits-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: $color-black;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.credits-title {
+    color: $color-pink;
+    text-align: center;
+    font-size: clamp(2rem, 7vw, 3rem);
+    margin: 0;
+}
+
+.credits-page h2 {
+    color: $color-pink;
+    margin: 0;
+    text-align: center;
+}
+
+.credits-intro {
+    color: $color-white;
+    text-align: center;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.credits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.credit-item {
+    color: $color-white;
+    line-height: 1.7;
+}
+
+.credit-item a {
+    color: $color-blue;
+    text-decoration: none;
+}
+
+.credit-item a:hover,
+.credit-item a:focus-visible {
+    text-decoration: underline;
+}

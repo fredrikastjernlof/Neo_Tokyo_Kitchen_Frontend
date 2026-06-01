@@ -1,0 +1,43 @@
+<nav class="main-nav" aria-label="Huvudmeny">
+  <ul>
+
+    <li routerLinkActive="current">
+      <a routerLink="/about">
+        <iconify-icon icon="proicons:person"></iconify-icon>
+        <span>Om oss</span>
+      </a>
+    </li>
+
+    <li routerLinkActive="current">
+      <a routerLink="/contact">
+        <iconify-icon icon="solar:phone-outline"></iconify-icon>
+        <span>Kontakt</span>
+      </a>
+    </li>
+
+    <li routerLinkActive="current"
+    [routerLinkActiveOptions]="{ exact: true }">
+      <a routerLink="/">
+        <iconify-icon icon="material-symbols:home-outline-rounded"></iconify-icon>
+        <span>Start</span>
+      </a>
+    </li>
+
+    <li routerLinkActive="current">
+      <a routerLink="/menu">
+        <iconify-icon icon="streamline-plump:bowl-chop-stick"></iconify-icon>
+        <span>Meny</span>
+      </a>
+    </li>
+
+    <li routerLinkActive="current">
+      <a routerLink="/booking">
+        <iconify-icon icon="uil:calendar"></iconify-icon>
+        <span>Boka bord</span>
+      </a>
+    </li>
+
+  
+
+  </ul>
+</nav>

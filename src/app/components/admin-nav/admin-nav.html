@@ -1,0 +1,42 @@
+<nav class="admin-nav" aria-label="Admin navigation">
+
+    <ul>
+
+        <li routerLinkActive="current">
+            <a routerLink="/admin/staff">
+                <iconify-icon icon="mdi:account-group-outline"></iconify-icon>
+                <span>Personal</span>
+            </a>
+        </li>
+
+        <li routerLinkActive="current">
+            <a routerLink="/admin/bookings">
+                <iconify-icon icon="uil:calendar"></iconify-icon>
+                <span>Bokningar</span>
+            </a>
+        </li> 
+
+         <li routerLinkActive="current" [routerLinkActiveOptions]="{ exact: true }">
+            <a routerLink="/admin/dashboard">
+                <iconify-icon icon="material-symbols:home-outline-rounded"></iconify-icon>
+                <span>Översikt</span>
+            </a>
+        </li>
+
+        <li routerLinkActive="current">
+            <a routerLink="/admin/menu">
+                <iconify-icon icon=boxicons:food-menu></iconify-icon>
+                <span>Menyhantering</span>
+            </a>
+        </li>
+
+        <li>
+            <button type="button" (click)="logout()">
+                <iconify-icon icon="mdi:logout"></iconify-icon>
+                <span> Logga ut</span>
+            </button>
+        </li>
+
+    </ul>
+
+</nav>
