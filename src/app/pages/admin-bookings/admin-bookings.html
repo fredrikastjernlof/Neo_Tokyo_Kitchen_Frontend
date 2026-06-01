@@ -7,7 +7,7 @@
     </p>
 
     <button type="button" class="new-booking-button" (click)="openNewBooking()">
-       + Ny bokning
+        + Ny bokning
     </button>
 
     <!-- Date filter -->
@@ -117,7 +117,7 @@
 
                 <div class="form-group">
                     <label for="edit-phone">
-                        <iconify-icon icon="mdi:phone-outline" ></iconify-icon>
+                        <iconify-icon icon="mdi:phone-outline"></iconify-icon>
                         Telefon
                     </label>
                     <input id="edit-phone" type="tel" name="phone" [(ngModel)]="editableBooking.phone"
@@ -170,7 +170,8 @@
                     <dl>
                         <div>
                             <dt>
-                                <iconify-icon icon="mdi:ticket-outline"></iconify-icon>Nr</dt>
+                                <iconify-icon icon="mdi:ticket-outline"></iconify-icon>Nr
+                            </dt>
                             <dd>{{ editableBooking.bookingNumber }}</dd>
                         </div>
                         <div>
@@ -225,39 +226,42 @@
 
             </form>
 
-            @if (showDeleteConfirmation()) {
-
-            <section class="delete-confirmation">
-
-                <h3>
-                    Ta bort bokning?
-                </h3>
-
-                <p>
-                    Bokning {{ editableBooking.bookingNumber }}
-                    kommer att tas bort permanent.
-                </p>
-
-                <div class="confirmation-actions">
-
-                    <button type="button" class="danger-button" (click)="deleteBooking()">
-                        Ja, ta bort
-                    </button>
-
-                    <button type="button" (click)="closeDeleteConfirmation()">
-                        Avbryt
-                    </button>
-
-                </div>
-
-            </section>
-
-            }
-
         </div>
 
     </section>
     }
 
+    @if (showDeleteConfirmation()) {
+    <section class="booking-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-booking-title">
+        <div class="booking-overlay-content delete-confirmation">
 
+            <div class="overlay-header">
+                <h2 id="delete-booking-title">Ta bort bokning?</h2>
+
+                <button type="button" class="close-button" (click)="closeDeleteConfirmation()"
+                    aria-label="Stäng raderingsfönster">
+                    ✕
+                </button>
+            </div>
+
+            <p>
+                Bokning <strong>{{ editableBooking.bookingNumber }}</strong>
+                kommer att tas bort permanent.
+            </p>
+
+            <p>Detta går inte att ångra.</p>
+
+            <div class="confirmation-actions">
+                <button type="button" (click)="closeDeleteConfirmation()">
+                    Avbryt
+                </button>
+
+                <button type="button" class="danger-button" (click)="deleteBooking()">
+                    Ja, ta bort
+                </button>
+            </div>
+
+        </div>
+    </section>
+    }
 </section>

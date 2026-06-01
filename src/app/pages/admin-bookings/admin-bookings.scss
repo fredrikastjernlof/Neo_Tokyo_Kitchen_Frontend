@@ -247,6 +247,7 @@ form {
 }
 
 .booking-overlay label {
+    margin-top: 0.5rem;
     color: $color-warm-white;
 }
 
@@ -356,7 +357,6 @@ form {
 
     .overlay-actions {
         margin-top: 1rem;
-
         flex-direction: row;
         justify-content: center;
     }
@@ -365,20 +365,12 @@ form {
 
 /* Delete confirmation styles */
 .delete-confirmation {
-    margin-top: 1.5rem;
-    padding: 1.5rem;
-
-    border: 1px solid #ff8fa3;
-    border-radius: 1rem;
-
-    background-color: rgba(255, 143, 163, 0.08);
-
+    max-width: 32rem;
     text-align: center;
+    border-color: #ff8fa3;
 }
 
-.delete-confirmation h3 {
-    margin-bottom: 0.75rem;
-
+.delete-confirmation h2 {
     color: #ff8fa3;
 }
 
