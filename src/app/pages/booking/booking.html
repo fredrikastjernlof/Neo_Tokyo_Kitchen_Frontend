@@ -12,8 +12,20 @@
                 </span>
             </legend>
 
-            <label for="guests">Antal gäster</label>
-            <input id="guests" name="guests" type="number" min="1" max="12" [(ngModel)]="booking.guests" [class.input-error]="isInvalid('guests')" (input)="clearFieldError('guests')">
+            <div class="stepper-control">
+                <button type="button" class="stepper-button" (click)="decreaseGuests()"
+                    aria-label="Minska antal gäster">
+                    <iconify-icon icon="ic:round-remove-circle-outline" aria-hidden="true"></iconify-icon>
+                </button>
+
+                <span class="stepper-value">
+                    {{ booking.guests }}
+                </span>
+
+                <button type="button" class="stepper-button" (click)="increaseGuests()" aria-label="Öka antal gäster">
+                    <iconify-icon icon="ic:round-add-circle-outline" aria-hidden="true"></iconify-icon>
+                </button>
+            </div>
         </fieldset>
 
         <fieldset class="booking-section">
@@ -24,8 +36,37 @@
                 </span>
             </legend>
 
-            <label for="date">Datum</label>
-            <input id="date" name="date" type="date" [(ngModel)]="booking.date" [class.input-error]="isInvalid('date')" (input)="clearFieldError('date')">
+            <div class="calendar" aria-label="Välj datum">
+                <div class="calendar-header">
+                    <button type="button" class="calendar-nav-button" (click)="previousMonth()">
+                        ‹
+                    </button>
+
+                    <h3>{{ getCalendarMonthLabel() }}</h3>
+
+                    <button type="button" class="calendar-nav-button" (click)="nextMonth()">
+                        ›
+                    </button>
+                </div>
+                <div class="calendar-weekdays" aria-hidden="true">
+                    @for (day of weekDays; track day) {
+                    <span>{{ day }}</span>
+                    }
+                </div>
+
+                <div class="calendar-days">
+                    @for (day of getCalendarDays(); track $index) {
+                    @if (day) {
+                    <button type="button" class="calendar-day" [class.calendar-day--weekend]="isWeekend(day)" [class.calendar-day--selected]="isSelectedDate(day)"
+                        [disabled]="isPastDate(day)" (click)="selectDate(day)">
+                        {{ day.getDate() }}
+                    </button>
+                    } @else {
+                    <span class="calendar-empty"></span>
+                    }
+                    }
+                </div>
+            </div>
         </fieldset>
 
         <fieldset class="booking-section">
@@ -36,8 +77,25 @@
                 </span>
             </legend>
 
-            <label for="time">Tid</label>
-            <input id="time" name="time" type="time" [(ngModel)]="booking.time" [class.input-error]="isInvalid('time')" (input)="clearFieldError('time')">
+            <div class="stepper-control">
+                <button type="button" class="stepper-button" (click)="decreaseTime()" aria-label="Tidigare tid">
+
+                    <iconify-icon icon="mdi:minus-circle-outline" aria-hidden="true">
+                    </iconify-icon>
+
+                </button>
+
+                <span class="stepper-value">
+                    {{ booking.time }}
+                </span>
+
+                <button type="button" class="stepper-button" (click)="increaseTime()" aria-label="Senare tid">
+
+                    <iconify-icon icon="mdi:plus-circle-outline" aria-hidden="true">
+                    </iconify-icon>
+
+                </button>
+            </div>
         </fieldset>
 
         <fieldset class="booking-section">
@@ -49,13 +107,16 @@
             </legend>
 
             <label for="name">Namn</label>
-            <input id="name" name="name" type="text" [(ngModel)]="booking.name" [class.input-error]="isInvalid('name')" (input)="clearFieldError('name')">
+            <input id="name" name="name" type="text" [(ngModel)]="booking.name" [class.input-error]="isInvalid('name')"
+                (input)="clearFieldError('name')">
 
             <label for="email">E-post</label>
-            <input id="email" name="email" type="email" [(ngModel)]="booking.email" [class.input-error]="isInvalid('email')" (input)="clearFieldError('email')">
+            <input id="email" name="email" type="email" [(ngModel)]="booking.email"
+                [class.input-error]="isInvalid('email')" (input)="clearFieldError('email')">
 
             <label for="phone">Telefon</label>
-            <input id="phone" name="phone" type="tel" [(ngModel)]="booking.phone" [class.input-error]="isInvalid('phone')" (input)="clearFieldError('phone')">
+            <input id="phone" name="phone" type="tel" [(ngModel)]="booking.phone"
+                [class.input-error]="isInvalid('phone')" (input)="clearFieldError('phone')">
         </fieldset>
 
         <section class="booking-summary" aria-labelledby="booking-summary-title">
@@ -141,7 +202,7 @@
                     Kontakta restaurangen om du vill ändra eller avboka din reservation.
                 </p>
 
-                <button type="button" (click)="closeConfirmation()">
+                <button type="button" class="close-button" (click)="closeConfirmation()">
                     Stäng
                 </button>
             </div>
@@ -164,7 +225,7 @@
         </div>
         }
 
-        <button type="submit" [disabled]="isLoading()">
+        <button class="booking-submit-button" type="submit" [disabled]="isLoading()">
             @if (isLoading()) {
             Bokar...
             } @else {

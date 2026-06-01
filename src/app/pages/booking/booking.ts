@@ -25,6 +25,9 @@ export class Booking {
     phone: '',
   };
 
+  weekDays = ['mån', 'tis', 'ons', 'tor', 'fre', 'lör', 'sön'];
+  calendarMonth = new Date();
+
   // Track loading state while booking is being sent
   isLoading = signal(false);
 
@@ -116,6 +119,162 @@ export class Booking {
     this.invalidFields.update((fields) =>
       fields.filter((currentField) => currentField !== field)
     );
+  }
+
+  // Increase or decrease number of guests, but keep it between 1 and 12
+  increaseGuests(): void {
+    if (this.booking.guests < 12) {
+      this.booking.guests++;
+      this.clearFieldError('guests');
+    }
+  }
+
+  // Decrease number of guests, but not below 1
+  decreaseGuests(): void {
+    if (this.booking.guests > 1) {
+      this.booking.guests--;
+      this.clearFieldError('guests');
+    }
+  }
+
+  // Format date as YYYY-MM-DD for input value
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  // Generate an array of dates for the current calendar month
+  getCalendarDays(): (Date | null)[] {
+    const year = this.calendarMonth.getFullYear();
+    const month = this.calendarMonth.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    const startOffset = (firstDay.getDay() + 6) % 7;
+    const days: (Date | null)[] = [];
+
+    for (let i = 0; i < startOffset; i++) {
+      days.push(null);
+    }
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      days.push(new Date(year, month, day));
+    }
+
+    return days;
+  }
+
+  // Handle date selection, but ignore past dates
+  selectDate(date: Date): void {
+    if (this.isPastDate(date)) {
+      return;
+    }
+
+    this.booking.date = this.formatDate(date);
+    this.clearFieldError('date');
+  }
+
+  // Check if a date is the currently selected booking date
+  isSelectedDate(date: Date): boolean {
+    return this.booking.date === this.formatDate(date);
+  }
+
+  // Check if a date is in the past
+  isPastDate(date: Date): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    return selectedDate < today;
+  }
+
+  // Get label for current calendar month
+  getCalendarMonthLabel(): string {
+    return this.calendarMonth.toLocaleDateString('sv-SE', {
+      month: 'long',
+      year: 'numeric',
+    });
+  }
+
+  // Navigate to previous or next month in calendar
+  previousMonth(): void {
+    this.calendarMonth = new Date(
+      this.calendarMonth.getFullYear(),
+      this.calendarMonth.getMonth() - 1,
+      1
+    );
+  }
+
+  // Navigate to next month in calendar
+  nextMonth(): void {
+    this.calendarMonth = new Date(
+      this.calendarMonth.getFullYear(),
+      this.calendarMonth.getMonth() + 1,
+      1
+    );
+  }
+
+  // Check if a date falls on a weekend
+  isWeekend(date: Date): boolean {
+    const day = date.getDay();
+
+    return day === 0 || day === 6;
+  }
+
+  // Increase or decrease time by 30 minutes, but keep it between 11:00 and 21:00
+  increaseTime(): void {
+
+    const [hours, minutes] =
+      this.booking.time.split(':').map(Number);
+
+    let totalMinutes =
+      hours * 60 + minutes + 30;
+
+    if (totalMinutes > 21 * 60) {
+      totalMinutes = 21 * 60;
+    }
+
+    const newHours =
+      Math.floor(totalMinutes / 60);
+
+    const newMinutes =
+      totalMinutes % 60;
+
+    this.booking.time =
+      `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
+
+    this.clearFieldError('time');
+  }
+
+  // Decrease time by 30 minutes, but not before 11:00
+  decreaseTime(): void {
+
+    const [hours, minutes] =
+      this.booking.time.split(':').map(Number);
+
+    let totalMinutes =
+      hours * 60 + minutes - 30;
+
+    if (totalMinutes < 11 * 60) {
+      totalMinutes = 11 * 60;
+    }
+
+    const newHours =
+      Math.floor(totalMinutes / 60);
+
+    const newMinutes =
+      totalMinutes % 60;
+
+    this.booking.time =
+      `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
+
+    this.clearFieldError('time');
   }
 
   // Send booking to backend
