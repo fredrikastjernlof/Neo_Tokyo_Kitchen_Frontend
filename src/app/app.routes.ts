@@ -13,6 +13,8 @@ import { AdminStaff } from './pages/admin-staff/admin-staff';
 import { authGuard } from './guards/auth-guard';
 import { Accessibility } from './pages/accessibility/accessibility';
 import { Privacy } from './pages/privacy/privacy';
+import { ImageCredits } from './pages/image-credits/image-credits';
+import { NotFound } from './pages/not-found/not-found';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -22,10 +24,12 @@ export const routes: Routes = [
   { path: 'about', component: About },
   { path: 'accessibility', component: Accessibility },
   { path: 'privacy', component: Privacy },
+  { path: 'credits', component: ImageCredits },
   { path: 'admin/login', component: AdminLogin },
   { path: 'admin/dashboard', component: AdminDashboard,canActivate: [authGuard], },
   { path: 'admin/bookings', component: AdminBookings, canActivate: [authGuard], },
   { path: 'admin/menu', component: AdminMenu, canActivate: [authGuard], },
   { path: 'admin/staff', component: AdminStaff, canActivate: [authGuard], },
-  { path: '**', redirectTo: '' }
+  { path: "404", component: NotFound},
+  { path: "**", redirectTo: "404", pathMatch: "full"}
 ];
