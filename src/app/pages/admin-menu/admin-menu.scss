@@ -249,7 +249,8 @@ $color-glow: #ffb84d;
 }
 
 .category-overlay input,
-.category-overlay textarea {
+.category-overlay textarea,
+.category-overlay select {
     width: 100%;
     padding: 0.75rem;
     background-color: #222222;
@@ -257,6 +258,20 @@ $color-glow: #ffb84d;
     border: 1px solid $color-warm-white;
     border-radius: 0.5rem;
     font-family: inherit;
+}
+
+.category-overlay select {
+    cursor: pointer;
+}
+
+.category-overlay input:focus,
+.category-overlay textarea:focus,
+.category-overlay select:focus {
+    outline: none;
+    border-color: white;
+    box-shadow:
+        0 0 4px #fff2c9,
+        0 0 8px $color-glow;
 }
 
 .category-edit-preview {
