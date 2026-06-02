@@ -5,12 +5,12 @@
     <form class="booking-form" (ngSubmit)="submitBooking()">
 
         <fieldset class="booking-section">
-            <legend>
-                <span class="booking-heading">
-                    <iconify-icon icon="mingcute:group-3-line" aria-hidden="true"></iconify-icon>
-                    Hur många är ni?
-                </span>
-            </legend>
+            <legend class="visually-hidden">Hur många är ni?</legend>
+
+            <div class="booking-heading" aria-hidden="true">
+                <iconify-icon icon="mingcute:group-3-line" aria-hidden="true"></iconify-icon>
+                Hur många är ni?
+            </div>
 
             <div class="stepper-control">
                 <button type="button" class="stepper-button" (click)="decreaseGuests()"
@@ -29,12 +29,12 @@
         </fieldset>
 
         <fieldset class="booking-section">
-            <legend>
-                <span class="booking-heading">
-                    <iconify-icon icon="uil:calendar" aria-hidden="true"></iconify-icon>
-                    Vilken dag vill ni komma?
-                </span>
-            </legend>
+            <legend class="visually-hidden">Vilken dag vill ni komma?</legend>
+
+            <div class="booking-heading" aria-hidden="true">
+                <iconify-icon icon="uil:calendar" aria-hidden="true"></iconify-icon>
+                Vilken dag vill ni komma?
+            </div>
 
             <div class="calendar" aria-label="Välj datum">
                 <div class="calendar-header">
@@ -57,8 +57,9 @@
                 <div class="calendar-days">
                     @for (day of getCalendarDays(); track $index) {
                     @if (day) {
-                    <button type="button" class="calendar-day" [class.calendar-day--weekend]="isWeekend(day)" [class.calendar-day--selected]="isSelectedDate(day)"
-                        [disabled]="isPastDate(day)" (click)="selectDate(day)">
+                    <button type="button" class="calendar-day" [class.calendar-day--weekend]="isWeekend(day)"
+                        [class.calendar-day--selected]="isSelectedDate(day)" [disabled]="isPastDate(day)"
+                        (click)="selectDate(day)">
                         {{ day.getDate() }}
                     </button>
                     } @else {
@@ -70,12 +71,12 @@
         </fieldset>
 
         <fieldset class="booking-section">
-            <legend>
-                <span class="booking-heading">
-                    <iconify-icon icon="tabler:clock" aria-hidden="true"></iconify-icon>
-                    Vilken tid vill ni komma?
-                </span>
-            </legend>
+            <legend class="visually-hidden">Vilken tid vill ni komma?</legend>
+
+            <div class="booking-heading" aria-hidden="true">
+                <iconify-icon icon="tabler:clock" aria-hidden="true"></iconify-icon>
+                Vilken tid vill ni komma?
+            </div>
 
             <div class="stepper-control">
                 <button type="button" class="stepper-button" (click)="decreaseTime()" aria-label="Tidigare tid">
@@ -99,12 +100,12 @@
         </fieldset>
 
         <fieldset class="booking-section">
-            <legend>
-                <span class="booking-heading">
-                    <iconify-icon icon="gravity-ui:person-pencil" aria-hidden="true"></iconify-icon>
-                    Dina uppgifter
-                </span>
-            </legend>
+            <legend class="visually-hidden">Dina uppgifter</legend>
+
+            <div class="booking-heading" aria-hidden="true">
+                <iconify-icon icon="gravity-ui:person-pencil" aria-hidden="true"></iconify-icon>
+                Dina uppgifter
+            </div>
 
             <label for="name">Namn</label>
             <input id="name" name="name" type="text" [(ngModel)]="booking.name" [class.input-error]="isInvalid('name')"
