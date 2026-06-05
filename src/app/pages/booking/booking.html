@@ -2,6 +2,7 @@
 
     <h1>Boka bord</h1>
 
+    <!-- Submit the booking form through Angular instead of a normal page reload -->
     <form class="booking-form" (ngSubmit)="submitBooking()">
 
         <fieldset class="booking-section">
@@ -13,15 +14,18 @@
             </div>
 
             <div class="stepper-control">
+                <!-- Decrease guest count through component logic -->
                 <button type="button" class="stepper-button" (click)="decreaseGuests()"
                     aria-label="Minska antal gäster">
                     <iconify-icon icon="ic:round-remove-circle-outline" aria-hidden="true"></iconify-icon>
                 </button>
 
+                <!-- Display current guest count from the booking object -->
                 <span class="stepper-value">
                     {{ booking.guests }}
                 </span>
 
+                <!-- Increase guest count through component logic -->
                 <button type="button" class="stepper-button" (click)="increaseGuests()" aria-label="Öka antal gäster">
                     <iconify-icon icon="ic:round-add-circle-outline" aria-hidden="true"></iconify-icon>
                 </button>
@@ -38,30 +42,38 @@
 
             <div class="calendar" aria-label="Välj datum">
                 <div class="calendar-header">
+                    <!-- Navigate to the previous calendar month -->
                     <button type="button" class="calendar-nav-button" (click)="previousMonth()">
                         ‹
                     </button>
 
-                    <h3>{{ getCalendarMonthLabel() }}</h3>
+                    <!-- Display the currently selected calendar month -->
+                    <h2>{{ getCalendarMonthLabel() }}</h2>
 
+                    <!-- Navigate to the next calendar month -->
                     <button type="button" class="calendar-nav-button" (click)="nextMonth()">
                         ›
                     </button>
                 </div>
                 <div class="calendar-weekdays" aria-hidden="true">
+                    <!-- Loop through weekday labels in the calendar header -->
                     @for (day of weekDays; track day) {
                     <span>{{ day }}</span>
                     }
                 </div>
 
                 <div class="calendar-days">
+                    <!-- Loop through generated calendar days, including empty placeholders before the first day of the month -->
                     @for (day of getCalendarDays(); track $index) {
+                    <!-- Render a clickable day button when the calendar item contains a real date -->
                     @if (day) {
+                    <!-- Style weekends, mark selected date, disable past dates and save selected date on click -->
                     <button type="button" class="calendar-day" [class.calendar-day--weekend]="isWeekend(day)"
                         [class.calendar-day--selected]="isSelectedDate(day)" [disabled]="isPastDate(day)"
                         (click)="selectDate(day)">
                         {{ day.getDate() }}
                     </button>
+                    <!-- Render empty calendar cells so the first day appears under the correct weekday -->
                     } @else {
                     <span class="calendar-empty"></span>
                     }
@@ -79,6 +91,7 @@
             </div>
 
             <div class="stepper-control">
+                <!-- Decrease selected booking time through component logic -->
                 <button type="button" class="stepper-button" (click)="decreaseTime()" aria-label="Tidigare tid">
 
                     <iconify-icon icon="mdi:minus-circle-outline" aria-hidden="true">
@@ -86,10 +99,12 @@
 
                 </button>
 
+                <!-- Display current selected booking time -->
                 <span class="stepper-value">
                     {{ booking.time }}
                 </span>
 
+                <!-- Increase selected booking time through component logic -->
                 <button type="button" class="stepper-button" (click)="increaseTime()" aria-label="Senare tid">
 
                     <iconify-icon icon="mdi:plus-circle-outline" aria-hidden="true">
@@ -107,6 +122,7 @@
                 Dina uppgifter
             </div>
 
+            <!-- Bind customer booking data and clear its validation error while typing -->
             <label for="name">Namn</label>
             <input id="name" name="name" type="text" [(ngModel)]="booking.name" [class.input-error]="isInvalid('name')"
                 (input)="clearFieldError('name')">
@@ -128,6 +144,7 @@
                 </span>
             </h2>
 
+            <!-- Live booking summary updates as the booking object changes -->
             <ul class="booking-summary-list">
                 <li>
                     <iconify-icon icon="mingcute:group-3-line" aria-hidden="true"></iconify-icon>
@@ -161,6 +178,7 @@
             </ul>
         </section>
 
+        <!-- Show confirmation dialog only after backend has returned a confirmed booking -->
         @if (confirmedBooking()) {
         <div class="booking-confirmation" role="dialog" aria-labelledby="booking-confirmation-title">
             <div class="booking-confirmation-content">
@@ -168,6 +186,7 @@
 
                 <p>
                     Bokningsnummer:
+                    <!-- Display booking number from the confirmed backend response -->
                     <strong>{{ confirmedBooking()?.bookingNumber }}</strong>
                 </p>
 
@@ -203,6 +222,7 @@
                     Kontakta restaurangen om du vill ändra eller avboka din reservation.
                 </p>
 
+                <!-- Close confirmation dialog and reset confirmation state -->
                 <button type="button" class="close-button" (click)="closeConfirmation()">
                     Stäng
                 </button>
@@ -210,15 +230,18 @@
         </div>
         }
 
+        <!-- Show error messages -->
         @if (errorMessage()) {
         <p class="error-message" role="alert">{{ errorMessage() }}</p>
         }
 
+        <!-- Show validation errors before submitting booking -->
         @if (validationErrors().length > 0) {
         <div class="validation-errors" role="alert">
             <p>Kontrollera bokningen:</p>
 
             <ul>
+                <!-- Loop through all validation messages and display them to the user -->
                 @for (error of validationErrors(); track error) {
                 <li>{{ error }}</li>
                 }
@@ -226,6 +249,7 @@
         </div>
         }
 
+        <!-- Disable submit button and show loading text while booking request is in progress -->
         <button class="booking-submit-button" type="submit" [disabled]="isLoading()">
             @if (isLoading()) {
             Bokar...

@@ -9,23 +9,28 @@
     <form class="admin-login-form" (ngSubmit)="login()">
 
         <label for="email">E-post</label>
+        <!-- Clear email validation state when the user starts typing -->
         <input id="email" name="email" type="email" [(ngModel)]="email" (ngModelChange)="clearFieldError('email')" [class.input-error]="invalidFields().includes('email')">
 
         <label for="password">Lösenord</label>
+        <!-- Clear password validation state when the user starts typing -->
         <input id="password" name="password" type="password" [(ngModel)]="password" (ngModelChange)="clearFieldError('password')" [class.input-error]="invalidFields().includes('password')">
 
+        <!-- Show login errors -->
         @if (errorMessage()) {
         <p class="admin-login-error" role="alert">
             {{ errorMessage() }}
         </p>
         }
 
+        <!-- Show all validation errors before submitting -->
         @if (validationErrors().length) {
         <div class="validation-errors">
 
             <p>Formuläret innehåller fel:</p>
 
             <ul>
+                <!-- Loop through and display all validation messages -->
                 @for (error of validationErrors(); track error) {
                 <li>{{ error }}</li>
                 }
@@ -34,6 +39,7 @@
         </div>
         }
 
+        <!-- Disable submit button and show loading state while login request is in progress -->
         <button type="submit" [disabled]="isLoading()">
             @if (isLoading()) {
             Loggar in...
