@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, StaffUser } from '../../services/auth.service';
 
 @Component({
   selector: 'app-admin-staff',
@@ -18,6 +18,20 @@ export class AdminStaff {
 
   showUserCreatedModal = signal(false);
   createdUserName = signal('');
+
+  // User list state
+  users = signal<StaffUser[]>([]);
+
+  // Selected user for deletion
+  selectedUserToDelete = signal<StaffUser | null>(null);
+
+  // Modal state
+  showUsersModal = signal(false);
+  showDeleteUserConfirmation = signal(false);
+
+  // Loading states
+  isLoadingUsers = signal(false);
+  isDeletingUser = signal(false);
 
   // Editable user form state
   editableUser = {
@@ -134,8 +148,101 @@ export class AdminStaff {
 
         this.userValidationErrors.set([]);
         this.invalidUserFields.set([]);
-        
+
         this.isSavingUser.set(false);
+      },
+    });
+  }
+
+  // Load all users from backend
+  loadUsers(): void {
+    this.isLoadingUsers.set(true);
+    this.userErrorMessage.set('');
+
+    this.authService.getUsers().subscribe({
+      next: (users) => {
+        this.users.set(users);
+        this.showUsersModal.set(true);
+        this.isLoadingUsers.set(false);
+      },
+      error: (error) => {
+
+        if (error.status === 403) {
+          this.userErrorMessage.set(
+            'Du har inte behörighet att visa personal.'
+          );
+        } else {
+          this.userErrorMessage.set(
+            'Användarna kunde inte hämtas.'
+          );
+        }
+
+        this.isLoadingUsers.set(false);
+      },
+    });
+  }
+
+  // Close user list modal
+  closeUsersModal(): void {
+    this.showUsersModal.set(false);
+    this.showDeleteUserConfirmation.set(false);
+    this.selectedUserToDelete.set(null);
+  }
+
+  // Open delete confirmation modal
+  openDeleteUserConfirmation(
+    user: StaffUser
+  ): void {
+    this.selectedUserToDelete.set(user);
+    this.showDeleteUserConfirmation.set(true);
+  }
+
+  // Close delete confirmation modal
+  closeDeleteUserConfirmation(): void {
+    this.showDeleteUserConfirmation.set(false);
+    this.selectedUserToDelete.set(null);
+  }
+
+  // Delete selected user
+  deleteUser(): void {
+
+    const user = this.selectedUserToDelete();
+
+    if (!user) {
+      return;
+    }
+
+    this.isDeletingUser.set(true);
+
+    this.authService.deleteUser(user._id).subscribe({
+      next: () => {
+
+        // Remove deleted user from UI list
+        this.users.update((users) =>
+          users.filter(
+            (currentUser) =>
+              currentUser._id !== user._id
+          )
+        );
+
+        this.showDeleteUserConfirmation.set(false);
+        this.selectedUserToDelete.set(null);
+        this.isDeletingUser.set(false);
+      },
+
+      error: (error) => {
+
+        if (error.status === 403) {
+          this.userErrorMessage.set(
+            'Du har inte behörighet att ta bort personal.'
+          );
+        } else {
+          this.userErrorMessage.set(
+            'Användaren kunde inte tas bort.'
+          );
+        }
+
+        this.isDeletingUser.set(false);
       },
     });
   }

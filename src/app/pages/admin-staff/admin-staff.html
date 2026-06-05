@@ -6,12 +6,21 @@
         Här kan personal registrerad som "Admin" skapa nya användare för restaurangens personalsidor.
     </p>
 
+    <button type="button" class="show-users-button" (click)="loadUsers()">
+
+        {{ isLoadingUsers()
+        ? 'Hämtar...'
+        : 'Hämta alla användare' }}
+
+    </button>
+
     @if (userErrorMessage()) {
     <p class="validation-errors">
         {{ userErrorMessage() }}
     </p>
     }
 
+    <!-- Form to create new users -->
     <form class="staff-form" (ngSubmit)="createUser()">
 
         <div class="form-group">
@@ -48,6 +57,7 @@
             </select>
         </div>
 
+        <!-- Form validation -->
         @if (userValidationErrors().length > 0) {
         <section class="validation-errors">
             <h2>Kontrollera formuläret</h2>
@@ -66,6 +76,7 @@
         </button>
     </form>
 
+    <!-- Confirm user created overlay -->
     @if (showUserCreatedModal()) {
     <section class="staff-overlay" role="dialog" aria-modal="true">
         <div class="staff-overlay-content">
@@ -84,4 +95,104 @@
     </section>
     }
 
+    <!-- List of staff overlay -->
+    @if (showUsersModal()) {
+
+    <section class="staff-overlay" role="dialog" aria-modal="true" aria-labelledby="users-title">
+
+        <div class="staff-overlay-content users-modal">
+            <div class="overlay-header">
+
+                <h2 id="users-title">
+                    Alla användare
+                </h2>
+
+                <button type="button" class="close-button" (click)="closeUsersModal()" aria-label="Stäng användarlista">
+                    ✕
+                </button>
+
+            </div>
+
+            <section class="user-list" aria-label="Lista med användare">
+
+                @for (user of users(); track user._id) {
+
+                <article class="user-card">
+                    <div>
+                        <h3>{{ user.name }}</h3>
+
+                        <p>
+                            <span>E-post:</span>
+                            {{ user.email }}
+                        </p>
+
+                        <p>
+                            <span>Behörighet:</span>
+                            <strong class="role-badge" [class.role-admin]="user.role === 'admin'"
+                                [class.role-staff]="user.role === 'staff'">
+
+                                {{ user.role === 'admin' ? 'Admin' : 'Personal' }}
+
+                            </strong>
+                        </p>
+                    </div>
+                    <button type="button" class="danger-button" (click)="openDeleteUserConfirmation(user)">
+                        Ta bort användare
+                    </button>
+                </article>
+
+                } @empty {
+
+                <p>Inga användare att visa.</p>
+
+                }
+
+            </section>
+        </div>
+    </section>
+
+    }
+    <!-- Delete confiramtion overlay -->
+    @if (showDeleteUserConfirmation()) {
+
+    <section class="staff-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-user-title">
+        <div class="staff-overlay-content delete-confirmation">
+            <div class="overlay-header">
+                <h2 id="delete-user-title">
+                    Ta bort användare?
+                </h2>
+                <button type="button" class="close-button" (click)="closeDeleteUserConfirmation()"
+                    aria-label="Stäng raderingsfönster">
+                    ✕
+                </button>
+            </div>
+            <p>
+                Användaren
+                <strong>
+                    {{ selectedUserToDelete()?.name }}
+                </strong>
+                kommer att tas bort permanent.
+            </p>
+
+            <p>
+                Detta går inte att ångra.
+            </p>
+
+            <div class="confirmation-actions">
+                <button type="button" (click)="closeDeleteUserConfirmation()">
+                    Avbryt
+                </button>
+                <button type="button" class="danger-button" (click)="deleteUser()">
+
+                    {{
+                    isDeletingUser()
+                    ? 'Tar bort...'
+                    : 'Ja, ta bort'
+                    }}
+
+                </button>
+            </div>
+        </div>
+    </section>
+    }
 </section>

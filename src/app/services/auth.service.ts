@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 
@@ -23,6 +23,13 @@ export interface AuthUser {
   email: string;
   role: 'admin' | 'staff';
   token: string;
+}
+
+export interface StaffUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'staff';
 }
 
 // Service for handling authentication and user management
@@ -86,4 +93,32 @@ export class AuthService {
       }
     );
   }
+
+  // Create authorization headers for protected admin routes
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+  }
+
+  // Get all registered users
+  getUsers(): Observable<StaffUser[]> {
+    return this.http.get<StaffUser[]>(
+      `${this.apiUrl}/users`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  // Delete a user by id
+  deleteUser(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/users/${id}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
 }
