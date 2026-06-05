@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService, StaffUser } from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import { StaffUser } from '../../models/auth.model';
 
 @Component({
   selector: 'app-admin-staff',

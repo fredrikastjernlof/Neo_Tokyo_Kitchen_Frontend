@@ -2,35 +2,13 @@ import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import {
+  LoginRequest,
+  RegisterUserRequest,
+  AuthUser,
+  StaffUser,
+} from '../models/auth.model';
 
-
-// Interfaces
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterUserRequest {
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'staff';
-}
-
-export interface AuthUser {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'staff';
-  token: string;
-}
-
-export interface StaffUser {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'staff';
-}
 
 // Service for handling authentication and user management
 @Injectable({
