@@ -38,6 +38,8 @@ Projektet är byggt med:
 * Angular Signals
 * Angular Services
 * Angular Router
+* Angular Forms (NgModel)
+* Route Guards
 * HttpClient
 * SCSS
 * Iconify
@@ -52,6 +54,10 @@ src/
 ├── app/
 │   ├── components/
 │   ├── guards/
+│   ├── models/
+│   │   ├── auth.model.ts
+│   │   ├── booking.model.ts
+│   │   └── menu.model.ts
 │   ├── pages/
 │   │   ├── admin-bookings/
 │   │   ├── admin-dashboard/
@@ -68,7 +74,9 @@ src/
 │   │   ├── privacy/
 │   │   └── not-found/
 │   └── services/
-│
+│       ├── auth.service.ts
+│       ├── booking.service.ts
+│       └── menu.service.ts
 public/
 ├── favicon.ico
 └── images/
@@ -158,6 +166,8 @@ Administratörer har full åtkomst till administrationssystemet medan personal h
 Administratörer kan:
 
 * skapa nya användare
+* visa registrerade användare
+* ta bort användare
 * välja användarroll
 * registrera administratörer
 * registrera personal
@@ -256,7 +266,7 @@ Administratörer kan:
 * söka bokningar
 * filtrera bokningar
 * redigera bokningar
-* radera bokningar
+* ta bort bokningar
 
 Administrationsgränssnittet använder modaler och overlays för bland annat bokningar, kategorier och menyrätter. Dessa är byggda separat men följer alla en liknande struktur och visuell stil.
 
@@ -384,7 +394,7 @@ ng build
 
 Frontend-applikationen är publicerad via Render.
 
-[Öppna Neo Tokyo Kitchen]( )
+[Öppna Neo Tokyo Kitchen](https://neo-tokyo-kitchen.onrender.com/)
 
 ---
 
