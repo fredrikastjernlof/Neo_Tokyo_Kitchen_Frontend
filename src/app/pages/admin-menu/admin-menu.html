@@ -12,10 +12,11 @@
 
     <section class="category-list" aria-label="Meny-kategorier">
 
+        <!-- Loop through all menu categories and render one card for each category -->
         @for (category of categories(); track category._id) {
 
         <article class="category-card">
-
+            <!-- Use the category image as a background image for the category preview -->
             <div class="category-preview"
                 [style.background-image]="'linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(' + getCategoryImageUrl(category) + ')'">
                 <span class="category-preview-title">
@@ -27,6 +28,7 @@
                 {{ category.description || 'Ingen beskrivning tillagd.' }}
             </p>
 
+            <!-- Open category editor or toggle the menu items that belong to this category -->
             <div class="category-actions">
                 <button type="button" (click)="openCategory(category)">
                     Redigera kategori
@@ -37,6 +39,7 @@
                 </button>
             </div>
 
+            <!-- Only show menu items when this category is the currently selected category -->
             @if (selectedMenuCategory()?._id === category._id) {
             <section class="category-menu-items">
                 <div class="category-menu-items-header">
@@ -47,6 +50,7 @@
                     </button>
                 </div>
 
+                <!-- Loop through all menu items that belong to the selected category -->
                 @for (item of getMenuItemsForSelectedCategory(); track item._id) {
                 <article class="menu-item-card">
 
@@ -58,10 +62,12 @@
 
                         <div class="menu-item-card__icons">
 
+                            <!-- Render chili icons based on the menu item's spice level -->
                             @for (spice of getSpiceIcons(item.spiceLevel); track $index) {
                             <iconify-icon icon="icon-park-outline:chili"></iconify-icon>
                             }
 
+                            <!-- Only show a protein icon if the menu item has a matching protein type -->
                             @if (getProteinIcon(item.protein)) {
                             <iconify-icon [icon]="getProteinIcon(item.protein)"></iconify-icon>
                             }
@@ -89,6 +95,7 @@
 
     </section>
 
+    <!-- Show the category editor overlay when a category has been selected or a new category is being created -->
     @if (selectedCategory()) {
     <section class="category-overlay" role="dialog" aria-modal="true" aria-labelledby="category-overlay-title">
         <div class="category-overlay-content">
@@ -102,13 +109,14 @@
                     ✕
                 </button>
             </div>
-
+            <!-- Show backend or save error messages for category actions -->
             @if (categoryErrorMessage()) {
             <p class="validation-errors">
                 {{ categoryErrorMessage() }}
             </p>
             }
 
+            <!-- Bind the category form to editableCategory so the preview and save data update live -->
             <form (ngSubmit)="saveCategory()">
                 <div class="form-group">
                     <label for="category-name">Namn</label>
@@ -126,12 +134,15 @@
                 <div class="form-group">
                     <label for="category-image">Kategoribild</label>
 
+                    <!-- Handle selected category image and create a local preview before saving -->
                     <input id="category-image" type="file" name="category-image"
                         accept="image/jpeg, image/jpg, image/png, image/webp" (change)="onCategoryImageSelected($event)"
                         hidden>
                     <label for="category-image" class="image-upload-button">
                         {{ selectedImageFile ? selectedImageFile.name : '+ Välj bild' }}
                     </label>
+
+                    <!-- Show remove image button only when a new image file has been selected -->
                     @if (selectedImageFile) {
                     <button type="button" class="remove-image-button" (click)="removeSelectedImage()">
                         - Ta bort vald bild
@@ -139,6 +150,7 @@
                     }
                 </div>
 
+                <!-- Show frontend validation errors before saving the category -->
                 @if (categoryValidationErrors().length > 0) {
                 <section class="validation-errors">
                     <h3>Kontrollera formuläret</h3>
@@ -151,6 +163,7 @@
                 </section>
                 }
 
+                <!-- Live preview for the category using either selected image, saved image, or fallback state -->
                 <section class="category-edit-preview" aria-label="Förhandsvisning av kategori">
                     <h3>Förhandsvisning</h3>
 
@@ -166,6 +179,7 @@
                     </p>
                 </section>
 
+                <!-- Hide delete button when creating a new category because it does not exist in the database yet -->
                 <div class="overlay-actions">
                     @if (!isCreatingCategory()) {
                     <button type="button" class="admin-menu__delete-button" (click)="openDeleteConfirmation()">
@@ -187,6 +201,7 @@
     </section>
     }
 
+    <!-- Show the menu item editor overlay when a menu item has been selected or a new item is being created -->
     @if (selectedMenuItem()) {
     <section class="category-overlay" role="dialog" aria-modal="true" aria-labelledby="menu-item-overlay-title">
         <div class="category-overlay-content">
@@ -201,18 +216,21 @@
                 </button>
             </div>
 
+            <!-- Change helper text depending on whether the user creates a new item or edits an existing one -->
             <p>
                 {{ isCreatingMenuItem()
                 ? 'Lägg till en ny rätt i den valda kategorin.'
                 : 'Ändra informationen för rätten och kontrollera förhandsvisningen innan du sparar.' }}
             </p>
 
+            <!-- Show backend or save error messages for menu item actions -->
             @if (menuItemErrorMessage()) {
             <p class="validation-errors">
                 {{ menuItemErrorMessage() }}
             </p>
             }
 
+            <!-- Bind menu item form fields to editableMenuItem so the preview updates live -->
             <form (ngSubmit)="saveMenuItem()">
 
                 <div class="form-group">
@@ -255,6 +273,7 @@
                     <label for="menu-item-spice">Styrka</label>
                     <select id="menu-item-spice" name="menu-item-spice" [(ngModel)]="editableMenuItem.spiceLevel"
                         [class.input-error]="isInvalidMenuItemField('menu-item-spice')">
+                        <!-- Use ngValue so spice level is saved as a number instead of a string -->
                         <option [ngValue]="0">Inte stark</option>
                         <option [ngValue]="1">Mild</option>
                         <option [ngValue]="2">Stark</option>
@@ -262,6 +281,7 @@
                     </select>
                 </div>
 
+                <!-- Show frontend validation errors before saving the menu item -->
                 @if (menuItemValidationErrors().length > 0) {
                 <section class="validation-errors">
                     <h3>Kontrollera formuläret</h3>
@@ -274,6 +294,7 @@
                 </section>
                 }
 
+                <!-- Live preview for the menu item before it is saved -->
                 <section class="category-edit-preview" aria-label="Förhandsvisning av rätt">
                     <h3>Förhandsvisning</h3>
 
@@ -287,10 +308,11 @@
                         <div class="menu-item-card__footer">
                             <div class="menu-item-card__icons">
 
+                                <!-- Render chili icons in the preview based on the selected spice level -->
                                 @for (spice of getSpiceIcons(editableMenuItem.spiceLevel); track $index) {
                                 <iconify-icon icon="icon-park-outline:chili"></iconify-icon>
                                 }
-
+                                <!-- Only show protein icon in the preview when the selected protein has a matching icon -->
                                 @if (getProteinIcon(editableMenuItem.protein)) {
                                 <iconify-icon [icon]="getProteinIcon(editableMenuItem.protein)"></iconify-icon>
                                 }
@@ -305,6 +327,7 @@
                 </section>
 
                 <div class="overlay-actions">
+                    <!-- Hide delete button when creating a new menu item because it does not exist in the database yet -->
                     @if (!isCreatingMenuItem()) {
                     <button type="button" class="admin-menu__delete-button" (click)="openMenuItemDeleteConfirmation()">
                         Radera
@@ -325,6 +348,7 @@
     </section>
     }
 
+    <!-- Show confirmation modal before deleting a menu item permanently -->
     @if (showMenuItemDeleteConfirmation()) {
     <section class="category-overlay" role="dialog" aria-modal="true">
         <div class="category-overlay-content delete-confirmation">
@@ -352,6 +376,7 @@
                     Avbryt
                 </button>
 
+                <!-- Show loading text while the selected menu item is being deleted -->
                 <button type="button" class="admin-menu__delete-confirm-button" (click)="deleteMenuItem()">
                     {{ isDeletingMenuItem() ? 'Raderar...' : 'Ja, radera' }}
                 </button>
@@ -360,7 +385,8 @@
         </div>
     </section>
     }
-
+    
+    <!-- Show confirmation modal before deleting a category permanently -->
     @if (showDeleteConfirmation()) {
     <section class="category-overlay" role="dialog" aria-modal="true">
         <div class="category-overlay-content delete-confirmation">
@@ -388,6 +414,7 @@
                     Avbryt
                 </button>
 
+                <!-- Show loading text while the selected category is being deleted -->
                 <button type="button" class="admin-menu__delete-confirm-button" (click)="deleteCategory()">
                     {{ isDeletingCategory() ? 'Raderar...' : 'Ja, radera' }}
                 </button>
