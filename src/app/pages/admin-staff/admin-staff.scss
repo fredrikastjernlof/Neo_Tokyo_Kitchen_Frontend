@@ -1,4 +1,6 @@
-$color-pink: #ff2fb3;
+$color-pink: #FF00B7;
+$color-blue: #00FFFB;
+$color-green: #65FF89;
 $color-warm-white: #ffe8b5;
 $color-bg: #111111;
 $color-card: #222222;
@@ -20,7 +22,7 @@ $color-glow: rgba(255, 232, 181, 0.55);
     text-align: center;
 }
 
-.admin-staff > p {
+.admin-staff>p {
     max-width: 34rem;
     margin: 0 auto 2rem;
     text-align: center;
@@ -132,4 +134,151 @@ $color-glow: rgba(255, 232, 181, 0.55);
 
 .staff-overlay-content p {
     margin-bottom: 1.5rem;
+}
+
+.show-users-button {
+    display: block;
+    margin: 0 auto 2rem;
+    padding: 0.75rem 1.1rem;
+
+    background: transparent;
+    color: $color-warm-white;
+
+    border: 1px solid rgba(255, 232, 181, 0.6);
+    border-radius: 0.5rem;
+
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.show-users-button:hover {
+    color: white;
+    border-color: $color-warm-white;
+
+    box-shadow:
+        0 0 4px #fff2c9,
+        0 0 8px $color-glow;
+}
+
+.users-modal {
+    width: min(100%, 42rem);
+    max-height: 90vh;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    margin-bottom: 1.5rem;
+}
+
+.overlay-header h2 {
+    margin: 0;
+}
+
+.close-button {
+    padding: 0;
+    background: none;
+    border: none;
+
+    color: $color-warm-white;
+    font-size: 1.8rem;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: white;
+
+    text-shadow:
+        0 0 2px #fff2c9,
+        0 0 4px $color-glow;
+}
+
+.user-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.user-card {
+    display: grid;
+    gap: 1rem;
+
+    padding: 1rem;
+    background-color: $color-card;
+
+    border: 1px solid rgba(255, 232, 181, 0.45);
+    border-radius: 0.75rem;
+}
+
+.user-card h3 {
+    margin-bottom: 0.35rem;
+    color: $color-warm-white;
+}
+
+
+.user-card p {
+    margin-bottom: 0.35rem;
+    color: white;
+
+    span {
+        color: $color-warm-white;
+    }
+}
+
+.role-admin {
+    color: $color-green;
+}
+
+.role-staff {
+    color: $color-blue;
+}
+
+
+.danger-button {
+    color: #ff8fa3 !important;
+    border-color: #ff8fa3 !important;
+}
+
+.delete-confirmation {
+    max-width: 32rem;
+    text-align: center;
+    border-color: #ff8fa3;
+}
+
+.delete-confirmation h2 {
+    color: #ff8fa3;
+}
+
+.delete-confirmation p {
+    margin-bottom: 1.25rem;
+}
+
+.confirmation-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.confirmation-actions button {
+    min-width: 180px;
+}
+
+@media (min-width: 700px) {
+    .user-card {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+    }
+
+    .confirmation-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
 }
