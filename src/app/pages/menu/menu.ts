@@ -4,7 +4,8 @@ import 'iconify-icon';
 
 
 // Import interfaces and service
-import { MenuCategory, MenuItem, MenuService } from '../../services/menu.service';
+import { MenuService } from '../../services/menu.service';
+import { MenuCategory, MenuItem } from '../../models/menu.model';
 
 @Component({
   selector: 'app-menu',

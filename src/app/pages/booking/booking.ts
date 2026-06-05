@@ -1,6 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BookingResponse, BookingService } from '../../services/booking.service';
+import { BookingService } from '../../services/booking.service';
+import { BookingResponse } from '../../models/booking.model';
 import 'iconify-icon';
 
 @Component({

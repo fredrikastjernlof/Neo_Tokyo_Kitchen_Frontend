@@ -1,35 +1,8 @@
 import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MenuService } from '../../services/menu.service';
+import { MenuCategory, MenuItem, EditableCategory, EditableMenuItem } from '../../models/menu.model';
 import 'iconify-icon';
-
-import {
-  MenuCategory,
-  MenuItem,
-  MenuService,
-} from '../../services/menu.service';
-
-interface EditableCategory {
-  id: string;
-  name: string;
-  description: string;
-
-  image?: {
-    filename: string;
-    path: string;
-    altText?: string;
-  };
-}
-
-interface EditableMenuItem {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
-  protein: string;
-  spiceLevel: number;
-  isAvailable: boolean;
-}
 
 @Component({
   selector: 'app-admin-menu',
@@ -576,6 +549,7 @@ export class AdminMenu implements OnInit {
     });
   }
 
+  // Validate new category input
   validateCategory(): boolean {
     const errors: string[] = [];
 
@@ -592,6 +566,7 @@ export class AdminMenu implements OnInit {
     return errors.length === 0;
   }
 
+  // Handle category image selection
   onCategoryImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
@@ -608,6 +583,7 @@ export class AdminMenu implements OnInit {
     this.imagePreviewUrl.set(previewUrl);
   }
 
+  // Delete selected image
   removeSelectedImage(): void {
     this.selectedImageFile = null;
     this.imagePreviewUrl.set(null);

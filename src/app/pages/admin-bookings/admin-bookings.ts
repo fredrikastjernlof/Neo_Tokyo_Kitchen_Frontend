@@ -1,22 +1,9 @@
 import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BookingService } from '../../services/booking.service';
+import { BookingResponse, AdminBooking } from '../../models/booking.model';
 import 'iconify-icon';
 
-import {
-  BookingResponse,
-  BookingService,
-} from '../../services/booking.service';
-
-interface AdminBooking {
-  id: string;
-  bookingNumber: string;
-  name: string;
-  email: string;
-  phone: string;
-  date: string;
-  time: string;
-  guests: number;
-}
 
 @Component({
   selector: 'app-admin-bookings',
@@ -29,7 +16,6 @@ export class AdminBookings implements OnInit {
 
   selectedDate = '';
   searchTerm = '';
-
 
   // Computed booking values
   // Filter bookings by selected date and search term

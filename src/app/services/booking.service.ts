@@ -3,26 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
-export interface BookingRequest {
-  name: string;
-  email: string;
-  phone: string;
-  guests: number;
-  startTime: string;
-  notes?: string;
-}
-
-export interface BookingResponse {
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  guests: number;
-  startTime: string;
-  bookingNumber: string;
-  status: string;
-  notes?: string;
-}
+import { BookingRequest, BookingResponse } from '../models/booking.model';
 
 @Injectable({
   providedIn: 'root',

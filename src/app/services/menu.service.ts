@@ -2,40 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { MenuCategory, MenuItem } from '../models/menu.model';
 
-export interface MenuCategory {
-  _id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  image?: {
-    filename: string;
-    path: string;
-    altText?: string;
-  };
-  sortOrder?: number;
-  isActive: boolean;
-}
-
-export interface DietaryOptions {
-  vegan: boolean;
-  vegetarian: boolean;
-  glutenFree: boolean;
-}
-
-export interface MenuItem {
-  _id: string;
-  name: string;
-  description: string;
-  category: MenuCategory | string;
-  price: number;
-  dietary?: DietaryOptions;
-  protein?: string;
-  spiceLevel?: number;
-  tags?: string[];
-  isAvailable: boolean;
-  sortOrder?: number;
-}
 
 @Injectable({
   providedIn: 'root',
