@@ -1,17 +1,32 @@
 <section class="confirm-modal" role="dialog" aria-modal="true">
-    <div class="confirm-modal__content">
-        <h2>{{ title() }}</h2>
+    <div class="confirm-modal__content delete-confirmation">
 
-        <p>{{ message() }}</p>
+        <div class="overlay-header">
+            <h2>{{ title() }}</h2>
 
-        <div class="confirm-modal__actions">
-            <button type="button" (click)="cancel.emit()">
+            <button type="button" class="close-button" (click)="cancel.emit()" aria-label="Stäng raderingsfönster">
+                ✕
+            </button>
+        </div>
+
+        <p class="confirm-modal__message">
+            {{ message() }}
+        </p>
+
+        <p class="confirm-modal__warning">
+            {{ warningText() }}
+        </p>
+
+        <div class="overlay-actions">
+            <button type="button" class="confirm-modal__cancel-button" (click)="cancel.emit()">
                 {{ cancelText() }}
             </button>
 
-            <button type="button" class="confirm-modal__danger" (click)="confirm.emit()" [disabled]="isLoading()">
+            <button type="button" class="confirm-modal__danger-button" (click)="confirm.emit()"
+                [disabled]="isLoading()">
                 {{ isLoading() ? 'Tar bort...' : confirmText() }}
             </button>
         </div>
+
     </div>
 </section>
