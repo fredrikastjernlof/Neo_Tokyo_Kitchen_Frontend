@@ -329,30 +329,9 @@ $color-glow: #ffb84d;
     }
 }
 
-.danger-button,
-.admin-menu__delete-button,
-.admin-menu__delete-confirm-button {
+.admin-menu__delete-button {
     color: #ff8fa3 !important;
     border-color: #ff8fa3 !important;
-}
-
-.delete-confirmation {
-    margin-top: 1.5rem;
-    padding: 1.5rem;
-    border: 1px solid #ff8fa3;
-    border-radius: 1rem;
-    background-color: $color-black;
-    text-align: center;
-}
-
-.delete-confirmation h3,
-.delete-confirmation h2 {
-    margin-bottom: 0.75rem;
-    color: #ff8fa3;
-}
-
-.delete-confirmation p {
-    margin-bottom: 1.25rem;
 }
 
 .input-error {

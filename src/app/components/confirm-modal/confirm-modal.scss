@@ -14,11 +14,9 @@ $color-glow: #ffb84d;
   position: fixed;
   inset: 0;
   z-index: 1000;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   padding: 1rem;
   background-color: rgba(0, 0, 0, 0.75);
 }
@@ -41,7 +39,6 @@ $color-glow: #ffb84d;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   margin-bottom: 1.5rem;
 }
 
@@ -105,6 +102,7 @@ $color-glow: #ffb84d;
 }
 
 .delete-confirmation {
+  max-width: 32rem;
   margin-top: 1.5rem;
   padding: 1.5rem;
   border: 1px solid #ff8fa3;
