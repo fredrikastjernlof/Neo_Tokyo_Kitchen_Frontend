@@ -351,7 +351,7 @@
     <!-- Show confirmation modal before deleting a menu item permanently -->
     @if (showMenuItemDeleteConfirmation()) {
     <app-confirm-modal title="Ta bort rätt?"
-        [message]="'Är du säker på att du vill ta bort ' + (menuItemToDelete()?.name || 'den här rätten') + '?' + ' Detta går inte att ångra.'"
+        [message]="'Är du säker på att du vill ta bort rätten ' + (menuItemToDelete()?.name || 'den här rätten') + '?'"
         confirmText="Ja, ta bort rätt" cancelText="Avbryt" [isLoading]="isDeletingMenuItem()"
         (confirm)="deleteMenuItem()" (cancel)="closeMenuItemDeleteConfirmation()" />
     }
@@ -359,7 +359,7 @@
     <!-- Show confirmation modal before deleting a category permanently -->
     @if (showDeleteConfirmation()) {
     <app-confirm-modal title="Ta bort kategori?"
-        [message]="'Är du säker på att du vill ta bort ' + (categoryToDelete()?.name || 'den här kategorin') + '?' + ' Detta går inte att ångra.'"
+        [message]="'Är du säker på att du vill ta bort kategorin ' + (categoryToDelete()?.name || 'den här kategorin') + '?'"
         confirmText="Ja, ta bort kategori" cancelText="Avbryt" [isLoading]="isDeletingCategory()"
         (confirm)="deleteCategory()" (cancel)="closeDeleteConfirmation()" />
     }

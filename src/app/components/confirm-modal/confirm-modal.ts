@@ -13,6 +13,7 @@ export class ConfirmModal {
 
   confirmText = input('Ja, ta bort');
   cancelText = input('Avbryt');
+  warningText = input('Detta går inte att ångra.');
   isLoading = input(false);
 
   // Output events
