@@ -78,7 +78,7 @@ src/
 │       ├── booking.service.ts
 │       └── menu.service.ts
 public/
-├── favicon.ico
+├── favicon.png
 └── images/
     ├── home/
     ├── hero/
@@ -223,8 +223,6 @@ Om en uppladdad bild inte kan hämtas visas automatiskt någon av följande stan
 * drinks.webp
 * fallback.webp
 
-Om den uppladdade bilden senare blir tillgänglig igen återgår systemet automatiskt till den korrekta bilden utan omladdning.
-
 ---
 
 ## Menyrätter
@@ -268,7 +266,7 @@ Administratörer kan:
 * redigera bokningar
 * ta bort bokningar
 
-Administrationsgränssnittet använder modaler och overlays för bland annat bokningar, kategorier och menyrätter. Dessa är byggda separat men följer alla en liknande struktur och visuell stil.
+Administrationsgränssnittet använder modaler och overlays för bland annat bokningar, kategorier och menyrätter. Bekräftelser vid radering hanteras med en återanvändbar modal-komponent.
 
 ---
 
