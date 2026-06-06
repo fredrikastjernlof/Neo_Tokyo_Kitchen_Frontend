@@ -2,12 +2,13 @@ import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core
 import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../services/booking.service';
 import { BookingResponse, AdminBooking } from '../../models/booking.model';
+import { ConfirmModal } from '../../components/confirm-modal/confirm-modal';
 import 'iconify-icon';
 
 
 @Component({
   selector: 'app-admin-bookings',
-  imports: [FormsModule],
+  imports: [FormsModule, ConfirmModal],
   templateUrl: './admin-bookings.html',
   styleUrl: './admin-bookings.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

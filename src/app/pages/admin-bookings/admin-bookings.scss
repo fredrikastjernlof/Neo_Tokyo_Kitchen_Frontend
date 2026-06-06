@@ -234,12 +234,6 @@ form {
     margin: 1.5rem 0 0;
 }
 
-.booking-form-grid {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
 .form-group {
     display: flex;
     flex-direction: column;
@@ -357,61 +351,6 @@ form {
 
     .overlay-actions {
         margin-top: 1rem;
-        flex-direction: row;
-        justify-content: center;
-    }
-}
-
-
-/* Delete confirmation styles */
-.delete-confirmation {
-    max-width: 32rem;
-    text-align: center;
-    border-color: #ff8fa3;
-}
-
-.delete-confirmation h2 {
-    color: #ff8fa3;
-}
-
-.delete-confirmation p {
-    margin-bottom: 1.25rem;
-}
-
-.confirmation-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.confirmation-actions button {
-    min-width: 180px;
-    padding: 0.75rem 1rem;
-
-    background: none;
-
-    border: 1px solid $color-warm-white;
-    border-radius: 0.5rem;
-
-    color: $color-warm-white;
-    font-family: inherit;
-
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.confirmation-actions button:hover {
-    color: white;
-    border-color: white;
-
-    box-shadow:
-        0 0 4px #fff2c9,
-        0 0 8px $color-glow;
-}
-
-@media (min-width: 700px) {
-    .confirmation-actions {
         flex-direction: row;
         justify-content: center;
     }

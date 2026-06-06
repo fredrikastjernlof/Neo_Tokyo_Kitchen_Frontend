@@ -154,45 +154,9 @@
     }
     <!-- Delete confiramtion overlay -->
     @if (showDeleteUserConfirmation()) {
-
-    <section class="staff-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-user-title">
-        <div class="staff-overlay-content delete-confirmation">
-            <div class="overlay-header">
-                <h2 id="delete-user-title">
-                    Ta bort användare?
-                </h2>
-                <button type="button" class="close-button" (click)="closeDeleteUserConfirmation()"
-                    aria-label="Stäng raderingsfönster">
-                    ✕
-                </button>
-            </div>
-            <p>
-                Användaren
-                <strong>
-                    {{ selectedUserToDelete()?.name }}
-                </strong>
-                kommer att tas bort permanent.
-            </p>
-
-            <p>
-                Detta går inte att ångra.
-            </p>
-
-            <div class="confirmation-actions">
-                <button type="button" (click)="closeDeleteUserConfirmation()">
-                    Avbryt
-                </button>
-                <button type="button" class="danger-button" (click)="deleteUser()">
-
-                    {{
-                    isDeletingUser()
-                    ? 'Tar bort...'
-                    : 'Ja, ta bort'
-                    }}
-
-                </button>
-            </div>
-        </div>
-    </section>
+    <app-confirm-modal title="Ta bort användare?"
+        [message]="'Är du säker på att du vill ta bort ' + (selectedUserToDelete()?.name || 'den här användaren') + '?'"
+        confirmText="Ja, ta bort användare" cancelText="Avbryt" [isLoading]="isDeletingUser()" (confirm)="deleteUser()"
+        (cancel)="closeDeleteUserConfirmation()" />
     }
 </section>

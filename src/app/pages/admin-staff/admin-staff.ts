@@ -2,10 +2,11 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { StaffUser } from '../../models/auth.model';
+import { ConfirmModal } from '../../components/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-admin-staff',
-  imports: [FormsModule],
+  imports: [FormsModule, ConfirmModal],
   templateUrl: './admin-staff.html',
   styleUrl: './admin-staff.scss',
 })
