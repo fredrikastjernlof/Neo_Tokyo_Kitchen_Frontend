@@ -2,11 +2,12 @@ import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core
 import { FormsModule } from '@angular/forms';
 import { MenuService } from '../../services/menu.service';
 import { MenuCategory, MenuItem, EditableCategory, EditableMenuItem } from '../../models/menu.model';
+import { ConfirmModal } from '../../components/confirm-modal/confirm-modal';
 import 'iconify-icon';
 
 @Component({
   selector: 'app-admin-menu',
-  imports: [FormsModule],
+  imports: [FormsModule, ConfirmModal],
   templateUrl: './admin-menu.html',
   styleUrl: './admin-menu.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -514,7 +515,7 @@ export class AdminMenu implements OnInit {
       return;
     }
 
-    this.categoryToDelete.set(category);
+    this.categoryToDelete.set(this.editableCategory);
     this.showDeleteConfirmation.set(true);
   }
 

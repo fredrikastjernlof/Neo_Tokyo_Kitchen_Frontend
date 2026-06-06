@@ -1,0 +1,17 @@
+<section class="confirm-modal" role="dialog" aria-modal="true">
+    <div class="confirm-modal__content">
+        <h2>{{ title() }}</h2>
+
+        <p>{{ message() }}</p>
+
+        <div class="confirm-modal__actions">
+            <button type="button" (click)="cancel.emit()">
+                {{ cancelText() }}
+            </button>
+
+            <button type="button" class="confirm-modal__danger" (click)="confirm.emit()" [disabled]="isLoading()">
+                {{ isLoading() ? 'Tar bort...' : confirmText() }}
+            </button>
+        </div>
+    </div>
+</section>
